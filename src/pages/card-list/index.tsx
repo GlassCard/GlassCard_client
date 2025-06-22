@@ -2,6 +2,7 @@ import Header from "@/components/header";
 import * as _ from './style';
 import SearchBar from "@/components/search";
 import Vocard from "@/components/vocard";
+import { cardData } from "./data";
 
 const CardList = () =>{
     return(
@@ -11,7 +12,11 @@ const CardList = () =>{
                 <SearchBar />
                 <_.CardListBox>
                     <_.CardListInner>
-                        <Vocard tag={["1학년","2학년"]} title={"2025 BSSM 영어 단어왕 선발대회"} subtitle={"170 카드"}/>
+                        {
+                            cardData.map((card) => (
+                                <Vocard tag={card.tag} title={card.title} count={card.count}/>
+                            ))
+                        }     
                     </_.CardListInner>
                 </_.CardListBox>
             </_.Container>

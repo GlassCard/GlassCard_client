@@ -4,10 +4,10 @@ import modify from '@/assets/modify.svg';
 interface PropsInterface{
     tag: string[],
     title: string,
-    subtitle: string
+    count: number
 }
 
-const Vocard = ({tag, title, subtitle} : PropsInterface) => {
+const Vocard = ({tag, title, count} : PropsInterface) => {
     return(
         <_.Container>
             <_.TagContainer>
@@ -19,7 +19,7 @@ const Vocard = ({tag, title, subtitle} : PropsInterface) => {
             </_.TagContainer>
             <_.TextContainer>
                 <_.Title>{title}</_.Title>
-                <_.SubTitle>{subtitle}</_.SubTitle>
+                <_.SubTitle>{count} 카드</_.SubTitle>
             </_.TextContainer>
             <_.ModifyContainer>
                 <_.Modify>
