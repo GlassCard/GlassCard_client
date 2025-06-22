@@ -1,4 +1,5 @@
 import styled from "@emotion/styled";
+import { keyframes } from "@emotion/react";
 
 export const Card = styled.div`
     display: flex;
@@ -97,3 +98,31 @@ export const StartBtnText = styled.p`
 export const Highlight = styled.span`
     color: var(--primary-dark);
 `
+
+const float = keyframes`
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-40px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+`;
+
+export const FloatingImg = styled.img<{top : string, left: string, time: string}>`
+    width: 240px;
+    height: 273px;
+    flex-shrink: 0;
+    position:absolute;
+    background-color:transparent;
+    user-drag: none;
+    user-select: none;
+    -webkit-user-drag: none;
+    -webkit-user-select: none;
+    left:${({ left }) => left};
+    top:${({ top }) => top};
+    animation: ${float} ${({ time }) => time} ease-in-out infinite;
+`
+
