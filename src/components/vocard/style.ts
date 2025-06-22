@@ -88,3 +88,20 @@ export const SubTitle = styled.p`
     line-height: 140%;
     background-color:transparent;
 `
+
+export const Modify = styled.div`
+    display: flex;
+    padding: 8px;
+    align-items: center;
+    gap: 8px;
+    border-radius: 16px;
+    border: 1px solid var(--primary-normal);
+    background: var(--primary-light-active);
+`
+
+export const ModifyIcon = styled.img`
+    width: 14px;
+    height: 14px;
+    aspect-ratio: 1/1;
+    background-color:transparent;
+`

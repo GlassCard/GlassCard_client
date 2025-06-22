@@ -1,4 +1,5 @@
 import * as _ from './style';
+import modify from '@/assets/modify.svg';
 
 const Vocard = () => {
     return(
@@ -12,7 +13,9 @@ const Vocard = () => {
                 <_.SubTitle>170 카드</_.SubTitle>
             </_.TextContainer>
             <_.ModifyContainer>
-                
+                <_.Modify>
+                    <_.ModifyIcon src={modify}/>
+                </_.Modify>
             </_.ModifyContainer>
         </_.Container>
     );
