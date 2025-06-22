@@ -66,3 +66,25 @@ export const TagText = styled.span`
     line-height: 140%;
     background-color:transparent;
 `
+
+export const Title = styled.p`
+    color: var(--text-primary);
+
+    font-family: "Pretendard Variable";
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 130%;
+    background-color:transparent;
+`
+
+export const SubTitle = styled.p`
+    color: var(--text-primary);
+
+    font-family: "Pretendard Variable";
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 140%;
+    background-color:transparent;
+`
