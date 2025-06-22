@@ -3,8 +3,8 @@ import { useState, useRef, useEffect } from 'react';
 import { createPortal } from "react-dom";
 import categoryDown from '@/assets/category-down.svg';
 import categoryUp from '@/assets/category-up.svg';
-import checkBoxActive from '@/assets/checkBox-active.svg';
-import checkBoxDisable from '@/assets/checkBox-disable.svg';
+import Option from '@/components/option';
+import { options } from './data';
 
 const SearchBar = () => {
     const [isClicked, setIsClicked] = useState(false);
@@ -53,13 +53,11 @@ const SearchBar = () => {
                             top: optionPos.top,
                             zIndex: 3000
                         }}>
-                            <_.Option>
-                                <_.OptionTitle>옵션 1</_.OptionTitle>
-                                <_.CheckBox src={checkBoxActive}/>
-                            </_.Option>
-                            <_.Option>
-                                <_.PlusCategory>새로운 카테고리 +</_.PlusCategory>
-                            </_.Option>
+                            {
+                                options.map((item)=>(
+                                    <Option name={item.name} />
+                                ))
+                            }
                         </_.OptionBox>,
                         document.body
                     )}
