@@ -1,11 +1,15 @@
 import Header from "@/components/header";
 import * as _ from './style';
 import { Link } from "react-router-dom";
+import doughnut from '@/assets/doughnut.svg';
+import cheese from '@/assets/cheese.svg';
 
 const Home = () =>{
     return(
         <>
             <Header />
+            <_.FloatingImg src={doughnut} top={"20%"} left={"70%"} time={"3s"}/>
+            <_.FloatingImg src={cheese} top={"70%"} left={"10%"} time={"2.5s"}/>
             <_.Card>
                 <_.TitleContainer>
                     <_.Title>AI가 도와주는 <_.Highlight>똑똑한</_.Highlight> 단어 학습</_.Title>
