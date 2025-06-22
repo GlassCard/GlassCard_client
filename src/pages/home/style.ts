@@ -97,6 +97,7 @@ export const StartBtnText = styled.p`
 
 export const Highlight = styled.span`
     color: var(--primary-dark);
+    background-color:transparent;
 `
 
 const float = keyframes`
