@@ -1,9 +1,9 @@
-
+import Header from "@/components/header";
 
 const Home = () =>{
     return(
         <>
-            This is Home        
+            <Header />
         </>
     )
 }
