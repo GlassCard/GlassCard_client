@@ -40,6 +40,7 @@ export const BtnBox = styled.div`
     align-items: center;
     gap: 8px;
     height:100%;
+    background:transparent;
 `
 
 export const CategorySelect = styled.div`
@@ -100,3 +101,32 @@ export const CategoryImg = styled.img`
     height: 9.5px;
     background:transparent;
 `
+
+export const OptionBox = styled.div`
+    width: 263px;
+    z-index: 2000;
+    display: flex;
+    background:transparent;
+    flex-direction: column;
+    align-items: center;
+    gap: 1px;
+    border-radius: 6px;
+    background: #FFF;
+    overflow: visible;
+    box-sizing:border-box;
+    box-shadow: 0px 3px 10px 0px rgba(0, 0, 0, 0.10);
+    padding: 9px 12px;
+    justify-content: space-between;
+    align-self: stretch;
+`
+
+export const CategorySelectWrapper = styled.div`
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width:100%;
+    height:100%;
+    background:transparent;
+`
+
