@@ -18,6 +18,7 @@ export const Logo = styled.div`
     height: 57px;
     background-image: url(${logo});
     background-color:transparent;
+    cursor: pointer;
 `
 
 export const Nav = styled.nav`
