@@ -1,16 +1,25 @@
 import * as _ from './style';
 import modify from '@/assets/modify.svg';
 
-const Vocard = () => {
+interface PropsInterface{
+    tag: string[],
+    title: string,
+    subtitle: string
+}
+
+const Vocard = ({tag, title, subtitle} : PropsInterface) => {
     return(
         <_.Container>
             <_.TagContainer>
-                <_.Tag><_.TagText>#</_.TagText><_.TagText>1학년</_.TagText></_.Tag>
-                <_.Tag><_.TagText>#</_.TagText><_.TagText>1학년</_.TagText></_.Tag>
+                {
+                    tag.map((item) => (
+                        <_.Tag><_.TagText>#</_.TagText><_.TagText>{item}</_.TagText></_.Tag>
+                    ))
+                }
             </_.TagContainer>
             <_.TextContainer>
-                <_.Title>2025 BSSM 영어 단어왕 선발대회</_.Title>
-                <_.SubTitle>170 카드</_.SubTitle>
+                <_.Title>{title}</_.Title>
+                <_.SubTitle>{subtitle}</_.SubTitle>
             </_.TextContainer>
             <_.ModifyContainer>
                 <_.Modify>

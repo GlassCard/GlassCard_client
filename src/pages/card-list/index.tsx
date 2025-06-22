@@ -11,7 +11,7 @@ const CardList = () =>{
                 <SearchBar />
                 <_.CardListBox>
                     <_.CardListInner>
-                        <Vocard />
+                        <Vocard tag={["1학년","2학년"]} title={"2025 BSSM 영어 단어왕 선발대회"} subtitle={"170 카드"}/>
                     </_.CardListInner>
                 </_.CardListBox>
             </_.Container>
