@@ -68,7 +68,7 @@ export const CategoryPlaceholder = styled.p`
 
 export const SearchBtn = styled.div`
     display: flex;
-    width: 88px;
+    width: 120px;
     height: 100%;
     padding: 8px 16px;
     justify-content: center;

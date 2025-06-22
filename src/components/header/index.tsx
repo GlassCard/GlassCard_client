@@ -1,17 +1,17 @@
 import * as _ from './style';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const Header = () => {
     const location = useLocation();
     const currentPath = location.pathname;
-
+    const navigate = useNavigate();
     const isHome = currentPath === '/';
     const isCardList = currentPath === '/card-list';
     const isMakeCard = currentPath === '/make-card';
 
     return(
         <_.Container>
-            <_.Logo />
+            <_.Logo onClick={() => navigate('/')}/>
             <_.Nav>
                 <_.NavA href='/' isSelected={isHome}>홈</_.NavA>
                 <_.Contour>|</_.Contour>

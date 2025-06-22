@@ -63,7 +63,7 @@ const SearchBar = () => {
                     )}
                 </_.CategorySelectWrapper>
                 <_.SearchBtn>
-                    <_.SearchBtnText>검색</_.SearchBtnText>
+                    <_.SearchBtnText>{window.location.pathname === '/make-card' ? '만들기' : '검색'}</_.SearchBtnText>
                 </_.SearchBtn>
             </_.BtnBox>
         </_.Container>
