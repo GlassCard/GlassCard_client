@@ -58,7 +58,7 @@ export const CategorySelect = styled.div`
 export const CategoryPlaceholder = styled.p`
     color: var(--text-disabled);
     font-family: "Pretendard Variable";
-    font-size: 12px;
+    font-size: 16px;
     font-style: normal;
     font-weight: 400;
     line-height: 140%;
@@ -96,7 +96,7 @@ export const SearchBtnText = styled.p`
 `
 
 export const CategoryImg = styled.img`
-    width: 7.5px;
-    height: 5px;
+    width: 12px;
+    height: 9.5px;
     background:transparent;
 `
