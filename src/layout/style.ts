@@ -9,5 +9,6 @@ export const Container = styled.div`
     min-height:100vh;
     background-image:url(${layout});
     background-repeat:no-repeat;
-    background-size: cover;
+    background-size: 100vw auto;
+    background-position: top center;
 `
