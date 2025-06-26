@@ -13,6 +13,23 @@ const chunkArray = <T,>(arr: T[], size: number): T[][] =>
 const CardList = () => {
     const [result, setResult] = useState<CardItem[]>([]);
     const [rows,setRows] = useState<CardItem[][]>([]);
+    const [search, setSearch] = useState("");      // 입력값
+    const [query, setQuery] = useState("");        // 실제 검색에 쓸 값
+
+    const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setSearch(e.target.value);
+    };
+
+    const handleSearchClick = () => {
+        setQuery(search); // 버튼 클릭 시에만 query 변경
+    };
+
+    useEffect(() => {
+        const filtered = query
+            ? result.filter(card => card.title.includes(query))
+            : result;
+        setRows(chunkArray(filtered, 3));
+    }, [result, query]);
 
     useEffect(() => {
         const fetchAll = async () => {
@@ -55,7 +72,7 @@ const CardList = () => {
         <>
             <Header />
             <_.Container>
-                <SearchBar />
+                <SearchBar value={search} onChange={handleSearch} onSearch={handleSearchClick} />
                 <_.CardListBox>
                     <_.CardListInner>
                         {rows.map((row, rowIdx) => (
