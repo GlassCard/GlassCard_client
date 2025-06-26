@@ -1,32 +1,23 @@
+import { createClient } from '@supabase/supabase-js'
 
-export const cardData = [
-    {
-        tag:["1학년","2학년"],
-        title:"2025 BSSM 영어 단어왕 선발대회",
-        count:170
-    },{
-        tag:["2학년","TOEIC Advanced"],
-        title:"2025 TOEIC 2분기 3차시 ",
-        count:44
-    },{
-        tag:["2학년","TOEIC Advanced"],
-        title:"2025 TOEIC 2분기 3차시 ",
-        count:44
-    },{
-        tag:["2학년","TOEIC Advanced"],
-        title:"2025 TOEIC 2분기 3차시 ",
-        count:44
-    },{
-        tag:["2학년","TOEIC Advanced"],
-        title:"2025 TOEIC 2분기 3차시 ",
-        count:44
-    },{
-        tag:["2학년","TOEIC Advanced"],
-        title:"2025 TOEIC 2분기 3차시 ",
-        count:44
-    },{
-        tag:["2학년","TOEIC Advanced"],
-        title:"2025 TOEIC 2분기 3차시 ",
-        count:44
-    } 
-]
+
+const anonkey = import.meta.env.VITE_ANON_KEY;
+const projectUrl = import.meta.env.VITE_PROJECT_URL;
+
+if (!anonkey || !projectUrl) {
+    throw new Error('Missing Supabase environment variables: REACT_APP_ANON_KEY or PROJECT_URL');
+}
+
+export const supabase = createClient(projectUrl, anonkey);
+
+export interface CardItem {
+    title: string;
+    tags: string[];
+    count: number;
+}
+
+export interface VocabList {
+    id: number | string;
+    title: string;
+    tags: string[];
+}
