@@ -6,7 +6,7 @@ import categoryUp from '@/assets/category-up.svg';
 import Option from '@/components/option';
 import { options } from './data';
 
-const SearchBar = () => {
+const SearchBar = ({ value, onChange, onSearch }: { value: string; onChange: (e: React.ChangeEvent<HTMLInputElement>) => void; onSearch: () => void }) => {
     const [isClicked, setIsClicked] = useState(false);
     const selectRef = useRef<HTMLDivElement>(null);
     const [optionPos, setOptionPos] = useState<{ left: number, top: number }>({ left: 0, top: 0 });
@@ -39,7 +39,7 @@ const SearchBar = () => {
 
     return (
         <_.Container>
-            <_.InputBox type='text' placeholder='제목을 입력하세요 ...' />
+            <_.InputBox type='text' placeholder='제목을 입력하세요 ...' value={value} onChange={onChange}/>
             <_.BtnBox>
                 <_.CategorySelectWrapper>
                     <_.CategorySelect ref={selectRef} onClick={handleClick}>
@@ -62,7 +62,7 @@ const SearchBar = () => {
                         document.body
                     )}
                 </_.CategorySelectWrapper>
-                <_.SearchBtn>
+                <_.SearchBtn onClick={onSearch}>
                     <_.SearchBtnText>{window.location.pathname === '/make-card' ? '만들기' : '검색'}</_.SearchBtnText>
                 </_.SearchBtn>
             </_.BtnBox>

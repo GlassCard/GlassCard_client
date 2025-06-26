@@ -1,4 +1,5 @@
 import styled from "@emotion/styled";
+import Skeleton from 'react-loading-skeleton';
 
 export const Container = styled.div`
     display: flex;
@@ -52,3 +53,14 @@ export const Empty = styled.div`
     border-radius: 24px;
     background-color:transparent;
 `
+
+export const SkeletonCard = styled(Skeleton)`
+    width: 100%;
+    min-width: 0;
+    height: 207px;
+    border-radius: 24px;
+    box-shadow: 0 2px 12px 0 rgba(0,0,0,0.06);
+    background-color:rgba(224, 231, 239, 0.57);
+    --base-color:rgba(224, 231, 239, 0.58);
+    --highlight-color:rgba(245, 247, 250, 0.61);
+`;

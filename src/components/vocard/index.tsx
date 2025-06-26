@@ -4,7 +4,7 @@ import modify from '@/assets/modify.svg';
 interface PropsInterface{
     tag: string[],
     title: string,
-    count: number
+    count?: number
 }
 
 const Vocard = ({tag, title, count} : PropsInterface) => {
