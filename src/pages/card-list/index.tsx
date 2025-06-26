@@ -4,7 +4,6 @@ import SearchBar from "@/components/search";
 import Vocard from "@/components/vocard";
 import { supabase, type CardItem, type VocabList } from "./data";
 import { useEffect, useState } from "react";
-import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 
 const chunkArray = <T,>(arr: T[], size: number): T[][] =>
