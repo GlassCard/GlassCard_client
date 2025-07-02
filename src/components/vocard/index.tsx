@@ -12,8 +12,8 @@ const Vocard = ({tag, title, count} : PropsInterface) => {
         <_.Container>
             <_.TagContainer>
                 {
-                    tag.map((item) => (
-                        <_.Tag><_.TagText>#</_.TagText><_.TagText>{item}</_.TagText></_.Tag>
+                    tag.map((item, index) => (
+                        <_.Tag key={index}><_.TagText>#</_.TagText><_.TagText>{item}</_.TagText></_.Tag>
                     ))
                 }
             </_.TagContainer>

@@ -5,7 +5,7 @@ const anonkey = import.meta.env.VITE_ANON_KEY;
 const projectUrl = import.meta.env.VITE_PROJECT_URL;
 
 if (!anonkey || !projectUrl) {
-    throw new Error('Missing Supabase environment variables: REACT_APP_ANON_KEY or PROJECT_URL');
+    throw new Error('Missing Supabase environment variables: VITE_ANON_KEY or VITE_PROJECT_URL');
 }
 
 export const supabase = createClient(projectUrl, anonkey);
