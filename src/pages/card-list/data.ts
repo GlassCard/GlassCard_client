@@ -11,13 +11,32 @@ if (!anonkey || !projectUrl) {
 export const supabase = createClient(projectUrl, anonkey);
 
 export interface CardItem {
+    id: string;
     title: string;
+    description?: string;
     tags: string[];
     count: number;
+    expiresAt: string;
 }
 
 export interface VocabList {
-    id: number | string;
+    id: string;
     title: string;
-    tags: string[];
+    description?: string;
+    expiresAt: string;
+    accessKey: string;
+}
+
+export interface VocabItem {
+    id: string;
+    vocabListId: string;
+    word: string;
+    meaning: string;
+    partOfSpeech?: string;
+}
+
+export interface Tag {
+    id: string;
+    name: string;
+    type: 'grade' | 'exam' | 'custom';
 }

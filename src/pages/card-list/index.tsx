@@ -35,32 +35,61 @@ const CardList = () => {
 
     useEffect(() => {
         const fetchAll = async () => {
-            // select id, title, tags from vocab_lists
-            const { data: listData, error: listError } = await supabase
-                .from('vocab_lists')
-                .select('id, title, tags');
-            if (listError) {
-                console.error(listError);
-                return;
-            }
-            // 각 단어카드마다 count 애트리뷰트 추가
-            const promises = (listData ?? []).map(async (list: VocabList) => {
-                const { count, error: countError } = await supabase
-                    .from('vocab_items')
-                    .select('*', { count: 'exact', head: true })
-                    .eq('vocab_list_id', list.id);
-                if (countError) {
-                    console.error(countError);
+            try {
+                // 1. 단어장 목록 가져오기
+                const { data: listData, error: listError } = await supabase
+                    .from('vocab_lists')
+                    .select('id, title, description, expires_at, access_key')
+                    .eq('is_deleted', false);
+                
+                if (listError) {
+                    console.error('단어장 목록 조회 오류:', listError);
+                    return;
                 }
-                return {
-                    title: list.title,
-                    tags: list.tags,
-                    count: count ?? 0,
-                };
-            });
-            const results = await Promise.all(promises);
-            setResult(results);
-            setLoading(false);
+
+                // 2. 각 단어장의 태그와 단어 개수 가져오기
+                const promises = (listData ?? []).map(async (list: any) => {
+                    // 태그 가져오기
+                    const { data: tagData, error: tagError } = await supabase
+                        .from('vocab_list_tags')
+                        .select(`
+                            tags (
+                                name
+                            )
+                        `)
+                        .eq('vocab_list_id', list.id);
+                    
+                    if (tagError) {
+                        console.error('태그 조회 오류:', tagError);
+                    }
+
+                    // 단어 개수 가져오기
+                    const { count, error: countError } = await supabase
+                        .from('vocab_items')
+                        .select('*', { count: 'exact', head: true })
+                        .eq('vocab_list_id', list.id);
+                    
+                    if (countError) {
+                        console.error('단어 개수 조회 오류:', countError);
+                    }
+
+                    return {
+                        id: list.id,
+                        title: list.title,
+                        description: list.description,
+                        tags: tagData?.map((t: any) => t.tags.name) || [],
+                        count: count ?? 0,
+                        expiresAt: list.expires_at,
+                    };
+                });
+
+                const results = await Promise.all(promises);
+                setResult(results);
+                setLoading(false);
+            } catch (error) {
+                console.error('데이터 로드 오류:', error);
+                setLoading(false);
+            }
         };
         fetchAll();
     }, []);
@@ -100,6 +129,7 @@ const CardList = () => {
                                     {row.map((card, idx) => (
                                         <Vocard
                                             key={card.title + idx}
+                                            id={card.id}
                                             tag={card.tags}
                                             title={card.title}
                                             count={card.count}
