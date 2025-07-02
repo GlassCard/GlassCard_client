@@ -1,15 +1,25 @@
 import * as _ from './style';
 import modify from '@/assets/modify.svg';
+import { Link, useNavigate } from 'react-router-dom';
 
 interface PropsInterface{
     tag: string[],
     title: string,
-    count?: number
+    count?: number,
+    id?: string
 }
 
-const Vocard = ({tag, title, count} : PropsInterface) => {
+const Vocard = ({tag, title, count, id} : PropsInterface) => {
+    const navigate = useNavigate();
+    
+    const handleCardClick = () => {
+        if (id) {
+            navigate(`/vocab-detail/${id}`);
+        }
+    };
+    
     return(
-        <_.Container>
+        <_.Container onClick={handleCardClick}>
             <_.TagContainer>
                 {
                     tag.map((item, index) => (
@@ -21,11 +31,11 @@ const Vocard = ({tag, title, count} : PropsInterface) => {
                 <_.Title>{title}</_.Title>
                 <_.SubTitle>{count} 카드</_.SubTitle>
             </_.TextContainer>
-            <_.ModifyContainer>
+            <_.ButtonContainer>
                 <_.Modify>
                     <_.ModifyIcon src={modify}/>
                 </_.Modify>
-            </_.ModifyContainer>
+            </_.ButtonContainer>
         </_.Container>
     );
 }
