@@ -7,6 +7,8 @@ import * as _ from './style';
 import Sound from '@/assets/sound.svg';
 import Check from '@/assets/check.svg';
 import X from '@/assets/X.svg';
+import doughnut from '@/assets/doughnut.svg';
+import cheese from '@/assets/cheese.svg';
 
 const Study = () => {
     const { vocabListId } = useParams<{ vocabListId: string }>();
@@ -154,6 +156,8 @@ const Study = () => {
 
     return (
         <>
+            <_.FloatingImg src={doughnut} top={"20%"} left={"70%"} time={"3s"}/>
+            <_.FloatingImg src={cheese} top={"70%"} left={"10%"} time={"2.5s"}/>
             <_.Container>
                 <_.QuestionNumber>
                     {currentIndex + 1} / {vocabItems.length}
