@@ -18,16 +18,16 @@ const CreateVocabModal = ({ isOpen, onClose, onSubmit, title }: CreateVocabModal
     const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
     const [isCategoryOpen, setIsCategoryOpen] = useState(false);
     const categoryRef = useRef<HTMLDivElement>(null);
-    const [categoryPos, setCategoryPos] = useState<{ left: number, top: number }>({ left: 0, top: 0 });
 
     const updateCategoryPos = () => {
-        if (categoryRef.current) {
-            const rect = categoryRef.current.getBoundingClientRect();
-            setCategoryPos({
-                left: rect.left + window.scrollX,
-                top: rect.bottom + window.scrollY + 10
-            });
-        }
+        // 카테고리 위치 업데이트 로직 (현재는 CSS로 처리하므로 주석 처리)
+        // if (categoryRef.current) {
+        //     const rect = categoryRef.current.getBoundingClientRect();
+        //     setCategoryPos({
+        //         left: rect.left + window.scrollX,
+        //         top: rect.bottom + window.scrollY + 10
+        //     });
+        // }
     };
 
     useEffect(() => {
