@@ -5,6 +5,8 @@ import { supabase } from '../card-list/data';
 import { useStudyStore, type VocabItem } from '@/store/studyStore';
 import * as _ from './style';
 import Sound from '@/assets/sound.svg';
+import Check from '@/assets/check.svg';
+import X from '@/assets/X.svg';
 
 const Study = () => {
     const { vocabListId } = useParams<{ vocabListId: string }>();
@@ -158,6 +160,18 @@ const Study = () => {
                 </_.QuestionNumber>
                 <_.QuestionContainer>
                     <_.QuestionContainerTop>
+                        {
+                            answerType !== null && (
+                                <_.StatusIndex status={answerType === null ? undefined : answerType}>
+                                    {answerType === "Correct" || answerType === "Flexible" && (
+                                        <_.IndexImg src={Check}></_.IndexImg>
+                                    )}
+                                    {answerType === "Incorrect" && (
+                                        <_.IndexImg src={X}></_.IndexImg>
+                                    )}
+                                </_.StatusIndex>
+                            )
+                        }
                         <_.QuestionContainerTopInner>
                             <_.SoundImg src={Sound}></_.SoundImg>
                             <_.Question>{currentQuestion.question}</_.Question>

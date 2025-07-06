@@ -11,6 +11,7 @@ export const Container = styled.div`
 
 export const QuestionContainer = styled.div`
     width: 100%;
+    position: relative;
     max-width: 700px;
     background: white;
     padding: 0 0 30px 0;
@@ -352,5 +353,80 @@ export const ResultMessage = styled.p`
     font-style: border;
     font-weight: 700;
     line-height: 140%;
+    background:transparent;
+`
+
+export const StatusIndex = styled.div<{ status: 'Correct' | 'Flexible' | 'Incorrect' | undefined }>`
+    display: flex;
+    width: 30px;
+    height: 60px;
+    padding: 10px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    position: absolute;
+    top: 0;
+    right: 20px;
+
+    border-color: ${({ status }) => {
+        switch (status) {
+            case 'Correct':
+                return 'var(--correct-green-stroke)';
+            case 'Flexible':
+                return '(--flexible-yellow-stroke)';
+            case 'Incorrect':
+                return 'var(--incorrect-red-stroke)';
+            default:
+                return 'var(--background-surface)';
+        }
+    }};
+
+    background: ${({ status }) => {
+        switch (status) {
+            case 'Correct':
+                return 'var(--correct-green-fill)';
+            case 'Flexible':
+                return 'var(--flexible-yellow-fill)';
+            case 'Incorrect':
+                return 'var(--incorrect-red-fill)';
+            default:
+                return 'rgba(63, 66, 101, 0.8)';
+        }
+    }};
+    
+    border-radius: 0px 0px var(--16px, 16px) var(--16px, 16px);
+    border-right: 5px solid ${({ status }) => {
+        switch (status) {
+            case 'Correct': return 'var(--correct-green-stroke)';
+            case 'Flexible': return 'var(--flexible-yellow-stroke)';
+            case 'Incorrect': return 'var(--incorrect-red-stroke)';
+            default: return 'var(--background-surface)';
+        }
+    }};
+    border-bottom: 5px solid ${({ status }) => {
+        switch (status) {
+            case 'Correct': return 'var(--correct-green-stroke)';
+            case 'Flexible': return 'var(--flexible-yellow-stroke)';
+            case 'Incorrect': return 'var(--incorrect-red-stroke)';
+            default: return 'var(--background-surface)';
+        }
+    }};
+    border-left: 5px solid ${({ status }) => {
+        switch (status) {
+            case 'Correct': return 'var(--correct-green-stroke)';
+            case 'Flexible': return 'var(--flexible-yellow-stroke)';
+            case 'Incorrect': return 'var(--incorrect-red-stroke)';
+            default: return 'var(--background-surface)';
+        }
+    }};
+
+    box-shadow: 0px 4px 20px 0px rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(50px);
+`
+
+export const IndexImg = styled.img`
+    width: 20px;
+    height: 20px;
     background:transparent;
 `
