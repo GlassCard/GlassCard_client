@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { compareAnswers, type CompareResponse } from '../services/api';
+import { compareAnswers } from '../services/api';
 
 export interface VocabItem {
   id: string;

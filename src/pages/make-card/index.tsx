@@ -205,7 +205,7 @@ const MakeCard = () => {
                 }));
 
             // 새 단어장 생성
-            const { data, error } = await supabase
+            const { error } = await supabase
                 .from('vocab_lists')
                 .insert({
                     title: searchValue,
