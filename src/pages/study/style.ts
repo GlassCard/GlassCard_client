@@ -14,12 +14,16 @@ export const QuestionContainer = styled.div`
     width: 100%;
     max-width: 600px;
     background: white;
-    border: 1px solid #e0e0e0;
-    padding: 30px;
+    padding: 0 30px 30px 30px;
     border-radius: 12px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     margin-bottom: 30px;
     text-align: center;
+    border-radius: 36px;
+    border: 12px solid var(--background-surface);
+    background: var(--background-fill);
+    box-shadow: 0px 6px 6px 0px rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(60px);
 `;
 
 export const QuestionNumber = styled.div`
@@ -29,10 +33,14 @@ export const QuestionNumber = styled.div`
 `;
 
 export const Question = styled.h2`
-    font-size: 24px;
-    color: #333;
-    margin-bottom: 20px;
-    line-height: 1.4;
+    color: var(--text-primary);
+
+
+    font-family: "Pretendard Variable";
+    font-size: 38px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 120%; /* 57.6px */
 `;
 
 export const Hint = styled.div`
@@ -46,12 +54,13 @@ export const Hint = styled.div`
 `;
 
 export const AnswerContainer = styled.div`
-    width: 100%;
-    max-width: 600px;
     display: flex;
-    flex-direction: column;
+    padding: 15px 48px;
+    justify-content: center;
     align-items: center;
-    gap: 20px;
+    gap: 15px;
+    flex: 1 0 0;
+    align-self: stretch;
 `;
 
 export const AnswerInput = styled.input`
@@ -279,3 +288,28 @@ export const LoadingText = styled.div`
     padding: 10px;
     font-style: italic;
 `; 
+
+export const QuestionContainerTop = styled.div`
+    display: flex;
+    padding: 15px;
+    height: 150px;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+    align-self: stretch;
+    border-bottom: 1.5px dashed var(--text-disabled);
+    background-color:transparent;
+`
+
+export const QuestionContainerTopInner = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+`
+
+export const SoundImg = styled.img`
+    width: 32px;
+    height: 32px;
+    aspect-ratio: 1/1;
+`

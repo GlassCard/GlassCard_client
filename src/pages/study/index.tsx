@@ -4,6 +4,7 @@ import Header from "@/components/header";
 import { supabase } from '../card-list/data';
 import { useStudyStore, type VocabItem } from '@/store/studyStore';
 import * as _ from './style';
+import Sound from '@/assets/sound.svg';
 
 const Study = () => {
     const { vocabListId } = useParams<{ vocabListId: string }>();
@@ -156,9 +157,13 @@ const Study = () => {
                     {currentIndex + 1} / {vocabItems.length}
                 </_.QuestionNumber>
                 <_.QuestionContainer>
-                    <_.Question>{currentQuestion.question}</_.Question>
-
-                    {!showHint && (
+                    <_.QuestionContainerTop>
+                        <_.QuestionContainerTopInner>
+                            <_.SoundImg src={Sound}></_.SoundImg>
+                            <_.Question>{currentQuestion.question}</_.Question>
+                        </_.QuestionContainerTopInner>
+                    </_.QuestionContainerTop>
+                    {/* {!showHint && (
                         <_.HintButton onClick={() => setShowHint(true)}>
                             힌트 보기
                         </_.HintButton>
@@ -166,13 +171,13 @@ const Study = () => {
 
                     {showHint && (
                         <_.Hint>힌트: {currentQuestion.hint}</_.Hint>
-                    )}
+                    )} */}
 
                     <_.AnswerContainer>
                         <_.AnswerInput
                             value={userAnswer}
                             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setUserAnswer(e.target.value)}
-                            placeholder="답을 입력하세요..."
+                            placeholder="단어의 의미를 입력하세요."
                             disabled={isCorrect !== null || isLoading}
                             onKeyPress={(e) => {
                                 if (e.key === 'Enter' && userAnswer.trim() && isCorrect === null && !isLoading) {
