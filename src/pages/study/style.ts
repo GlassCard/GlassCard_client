@@ -104,21 +104,44 @@ export const ResultMessage = styled.div<{ isCorrect: boolean }>`
     border: 1px solid ${props => props.isCorrect ? '#c3e6cb' : '#f5c6cb'};
 `;
 
-export const SubmitButton = styled.button`
+export const SubmitButton = styled.button<{ status: 'Correct' | 'Flexible' | 'Incorrect' | undefined }>`
     padding: 15px 40px;
     font-size: 18px;
     font-weight: bold;
     color: white;
-    background: rgba(63, 66, 101, 0.8);
+    background: ${({ status }) => {
+        switch (status) {
+            case 'Correct':
+                return 'var(--correct-green-fill)'; // 초록
+            case 'Flexible':
+                return 'var(--flexible-yellow-fill)'; // 노랑
+            case 'Incorrect':
+                return 'var(--incorrect-red-fill)'; // 빨강
+            default:
+                return 'rgba(63, 66, 101, 0.8)';
+        }
+    }};
     box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
     backdrop-filter: blur(40px);
     cursor: pointer;
     border-radius: 24px;
-    border: 5px solid var(--background-surface);
+    border: 5px solid;
     transition: all 0.3s ease;
     width: 100%;
     max-width: 700px;
-    box-sizing:border-box;
+    box-sizing: border-box;
+    border-color: ${({ status }) => {
+        switch (status) {
+            case 'Correct':
+                return 'var(--correct-green-stroke)';
+            case 'Flexible':
+                return '(--flexible-yellow-stroke)';
+            case 'Incorrect':
+                return 'var(--incorrect-red-stroke)';
+            default:
+                return 'var(--background-surface)';
+        }
+    }};
     
     &:hover:not(:disabled) {
         background: #45a049;

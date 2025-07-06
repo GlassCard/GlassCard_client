@@ -70,13 +70,13 @@ const Study = () => {
 
     const handleSubmit = async () => {
         if (!vocabItems[currentIndex] || !studySession || !userAnswer.trim()) return;
-
         await submitAnswer();
 
         // 3초 후 다음 문제로
         setTimeout(() => {
             nextQuestion();
         }, 3000);
+        
     };
 
     const getCurrentQuestion = () => {
@@ -215,6 +215,7 @@ const Study = () => {
                 <_.SubmitButton
                     onClick={handleSubmit}
                     disabled={!userAnswer.trim() || isCorrect !== null || isLoading}
+                    status={answerType}
                 >
                     {isLoading ? 'Checking...' : 'Next'}
                 </_.SubmitButton>
@@ -224,4 +225,4 @@ const Study = () => {
     );
 };
 
-export default Study; 
+export default Study;
