@@ -78,7 +78,7 @@ const Study = () => {
         setTimeout(() => {
             nextQuestion();
         }, 3000);
-        
+
     };
 
     const getCurrentQuestion = () => {
@@ -178,9 +178,7 @@ const Study = () => {
                         </_.QuestionContainerTopInner>
                     </_.QuestionContainerTop>
 
-                    {/* {showHint && (
-                        <_.Hint>힌트: {currentQuestion.hint}</_.Hint>
-                    )} */}
+
 
                     <_.AnswerContainer>
                         <_.AnswerContainerInner>
@@ -196,13 +194,16 @@ const Study = () => {
                                 }}
                                 status={answerType === null ? undefined : answerType}
                             />
-                            {isCorrect !== null &&(
+                            {isCorrect !== null && (
                                 <_.ResultMessage>정답: {vocabItems[currentIndex]?.correctAnswer}</_.ResultMessage>
                             )}
-                            {!showHint && isCorrect === null &&(
+                            {!showHint && isCorrect === null && (
                                 <_.HintButton onClick={() => setShowHint(true)}>
                                     힌트 보기
                                 </_.HintButton>
+                            )}
+                            {isCorrect === null && showHint && (
+                                <_.HintButton>힌트: {currentQuestion.hint}</_.HintButton>
                             )}
                         </_.AnswerContainerInner>
 
