@@ -4,26 +4,10 @@ export const Container = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content:center;
     padding: 64px;
     min-height: 100vh;
-    background-color: #F5F1FF;
-`;
-
-export const ProgressBar = styled.div`
-    width: 100%;
-    max-width: 600px;
-    height: 8px;
-    background-color: #e0e0e0;
-    border-radius: 4px;
-    margin-bottom: 40px;
-    overflow: hidden;
-`;
-
-export const ProgressFill = styled.div<{ width: string }>`
-    height: 100%;
-    background-color: #4CAF50;
-    width: ${props => props.width};
-    transition: width 0.3s ease;
+    background-color:transparent;
 `;
 
 export const QuestionContainer = styled.div`
@@ -111,18 +95,21 @@ export const SubmitButton = styled.button`
     font-size: 18px;
     font-weight: bold;
     color: white;
-    background: #4CAF50;
-    border: none;
-    border-radius: 8px;
+    background: rgba(63, 66, 101, 0.8);
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(40px);
     cursor: pointer;
+    border-radius: 24px;
+    border: 5px solid var(--background-surface);
     transition: all 0.3s ease;
+    width: 100%;
+    max-width: 600px;
     
     &:hover:not(:disabled) {
         background: #45a049;
     }
     
     &:disabled {
-        background: #cccccc;
         cursor: not-allowed;
     }
 `;
