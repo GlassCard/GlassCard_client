@@ -4,17 +4,20 @@ import checkBoxDisable from '@/assets/checkBox-disable.svg';
 import { useState } from 'react';
 
 interface PropsInterface{
-    name: string,
-
+    name: string;
+    onClick?: () => void;
+    isSelected?: boolean;
 }
 
-const Option = ({name} : PropsInterface) => {
-    const [isChecked, setIsChecked] = useState(false);
+const Option = ({name, onClick, isSelected} : PropsInterface) => {
+    const handleClick = () => {
+        onClick?.();
+    };
 
     return (
-        <_.Option onClick={()=>setIsChecked(!isChecked)}>
+        <_.Option onClick={handleClick}>
             <_.OptionTitle>{name}</_.OptionTitle>
-            <_.CheckBox src={isChecked ? checkBoxActive : checkBoxDisable} />
+            <_.CheckBox src={isSelected ? checkBoxActive : checkBoxDisable} />
         </_.Option>
     );
 }

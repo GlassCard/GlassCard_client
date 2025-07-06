@@ -20,24 +20,29 @@ const VocabDetail = () => {
     useEffect(() => {
         const fetchVocabItems = async () => {
             try {
-                const { data, error } = await supabase
-                    .from('vocab_items')
-                    .select('id, word, meaning, part_of_speech')
-                    .eq('vocab_list_id', vocabListId);
+                // vocab_lists 테이블에서 단어장 정보와 items JSONB 가져오기
+                const { data: vocabList, error: listError } = await supabase
+                    .from('vocab_lists')
+                    .select('id, title, items')
+                    .eq('id', vocabListId)
+                    .single();
                 
-                if (error) {
-                    console.error('단어 목록 조회 오류:', error);
+                if (listError || !vocabList) {
+                    console.error('단어장 조회 오류:', listError);
                     return;
                 }
                 
-                const items = data?.map((item: any) => ({
-                    id: item.id,
-                    word: item.word,
-                    meaning: item.meaning,
-                    partOfSpeech: item.part_of_speech
-                })) || [];
+                // items JSONB에서 단어 목록 가져오기
+                const items = vocabList.items || [];
                 
-                setVocabItems(items);
+                const vocabItems = items.map((item: any, index: number) => ({
+                    id: `item-${index}`,
+                    word: item.word || '',
+                    meaning: item.meaning || '',
+                    partOfSpeech: item.part_of_speech || ''
+                }));
+                
+                setVocabItems(vocabItems);
                 setLoading(false);
             } catch (error) {
                 console.error('데이터 로드 오류:', error);

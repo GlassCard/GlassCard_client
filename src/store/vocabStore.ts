@@ -13,6 +13,7 @@ interface VocabState {
   addVocab: () => void;
   updateVocab: (id: string, field: keyof Omit<VocabData, 'id'>, value: string | boolean) => void;
   deleteVocab: (id: string) => void;
+  setVocabList: (vocabList: VocabData[]) => void;
 }
 
 export const useVocabStore = create<VocabState>((set) => ({
@@ -46,4 +47,5 @@ export const useVocabStore = create<VocabState>((set) => ({
     set((state) => ({
       vocabList: state.vocabList.filter((vocab) => vocab.id !== id),
     })),
+  setVocabList: (vocabList) => set({ vocabList }),
 }));

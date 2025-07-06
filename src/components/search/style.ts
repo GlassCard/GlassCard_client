@@ -130,3 +130,36 @@ export const CategorySelectWrapper = styled.div`
     background:transparent;
 `
 
+export const OptionHeader = styled.div`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 8px 12px;
+    border-bottom: 1px solid #f0f0f0;
+    background: transparent;
+`
+
+export const OptionTitle = styled.span`
+    color: var(--text-primary);
+    font-family: "Pretendard Variable";
+    font-size: 14px;
+    font-weight: 600;
+    background: transparent;
+`
+
+export const CloseButton = styled.button`
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    color: var(--text-disabled);
+    font-size: 16px;
+    background: transparent;
+    
+    &:hover {
+        background: #f5f5f5;
+    }
+`
+

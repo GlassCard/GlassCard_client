@@ -23,7 +23,6 @@ const Study = () => {
         showHint,
         studySession,
         studyMode,
-        wrongAnswers,
         isCompleted,
         isLoading,
         error,
@@ -40,27 +39,32 @@ const Study = () => {
     useEffect(() => {
         const fetchVocabItems = async () => {
             try {
-                const { data, error } = await supabase
-                    .from('vocab_items')
-                    .select('id, word, meaning, part_of_speech')
-                    .eq('vocab_list_id', vocabListId);
+                // vocab_lists 테이블에서 단어장 정보와 items JSONB 가져오기
+                const { data: vocabList, error: listError } = await supabase
+                    .from('vocab_lists')
+                    .select('id, title, items')
+                    .eq('id', vocabListId)
+                    .single();
 
-                if (error) {
-                    console.error('단어 목록 조회 오류:', error);
-                    setError('단어 목록을 불러오는데 실패했습니다.');
+                if (listError || !vocabList) {
+                    console.error('단어장 조회 오류:', listError);
+                    setError('단어장을 불러오는데 실패했습니다.');
                     return;
                 }
 
-                const items: VocabItem[] = data?.map((item: any) => ({
-                    id: item.id,
-                    word: item.word,
-                    meaning: item.meaning,
-                    partOfSpeech: item.part_of_speech,
+                // items JSONB에서 단어 목록 가져오기
+                const items = vocabList.items || [];
+                
+                const vocabItems: VocabItem[] = items.map((item: any, index: number) => ({
+                    id: `item-${index}`,
+                    word: item.word || '',
+                    meaning: item.meaning || '',
+                    partOfSpeech: item.part_of_speech || '',
                     correctAnswer: item.meaning // 단어→뜻 학습 모드 기준
-                })) || [];
+                }));
 
                 // 학습 세션 초기화
-                initializeSession(vocabListId || '', items);
+                initializeSession(vocabListId || '', vocabItems);
             } catch (error) {
                 console.error('데이터 로드 오류:', error);
                 setError('데이터를 불러오는데 실패했습니다.');
@@ -189,7 +193,11 @@ const Study = () => {
                             <_.AnswerInput
                                 value={userAnswer}
                                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => setUserAnswer(e.target.value)}
-                                placeholder="단어의 의미를 입력하세요."
+                                placeholder={
+                                    studyMode === 'word-to-meaning' ? "단어의 의미를 입력하세요." :
+                                    studyMode === 'meaning-to-word' ? "단어를 입력하세요." :
+                                    "빈칸에 들어갈 단어를 입력하세요."
+                                }
                                 disabled={isCorrect !== null || isLoading}
                                 onKeyPress={(e) => {
                                     if (e.key === 'Enter' && userAnswer.trim() && isCorrect === null && !isLoading) {
@@ -199,7 +207,13 @@ const Study = () => {
                                 status={answerType === null ? undefined : answerType}
                             />
                             {isCorrect !== null && (
-                                <_.ResultMessage>정답: {vocabItems[currentIndex]?.correctAnswer}</_.ResultMessage>
+                                <_.ResultMessage>
+                                    정답: {
+                                        studyMode === 'word-to-meaning' ? vocabItems[currentIndex]?.meaning :
+                                        studyMode === 'meaning-to-word' ? vocabItems[currentIndex]?.word :
+                                        vocabItems[currentIndex]?.word
+                                    }
+                                </_.ResultMessage>
                             )}
                             {!showHint && isCorrect === null && (
                                 <_.HintButton onClick={() => setShowHint(true)}>

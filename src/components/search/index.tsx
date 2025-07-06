@@ -6,7 +6,19 @@ import categoryUp from '@/assets/category-up.svg';
 import Option from '@/components/option';
 import { options } from './data';
 
-const SearchBar = ({ value, onChange, onSearch }: { value: string; onChange: (e: React.ChangeEvent<HTMLInputElement>) => void; onSearch: () => void }) => {
+const SearchBar = ({ 
+    value, 
+    onChange, 
+    onSearch, 
+    onCategorySelect,
+    selectedCategories
+}: { 
+    value: string; 
+    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void; 
+    onSearch: () => void;
+    onCategorySelect?: (category: string) => void;
+    selectedCategories?: string[];
+}) => {
     const [isClicked, setIsClicked] = useState(false);
     const selectRef = useRef<HTMLDivElement>(null);
     const [optionPos, setOptionPos] = useState<{ left: number, top: number }>({ left: 0, top: 0 });
@@ -43,27 +55,54 @@ const SearchBar = ({ value, onChange, onSearch }: { value: string; onChange: (e:
             <_.BtnBox>
                 <_.CategorySelectWrapper>
                     <_.CategorySelect ref={selectRef} onClick={handleClick}>
-                        <_.CategoryPlaceholder>카테고리 선택</_.CategoryPlaceholder>
+                        <_.CategoryPlaceholder>
+                            {selectedCategories && selectedCategories.length > 0 
+                                ? selectedCategories.join(", ") 
+                                : "카테고리 선택"
+                            }
+                        </_.CategoryPlaceholder>
                         <_.CategoryImg src={isClicked ? categoryDown : categoryUp} />
                     </_.CategorySelect>
-                    {isClicked && createPortal(
+                                        {isClicked && createPortal(
                         <_.OptionBox style={{
                             position: "absolute",
                             left: optionPos.left,
                             top: optionPos.top,
                             zIndex: 3000
                         }}>
+                            <_.OptionHeader>
+                                <_.OptionTitle>카테고리 선택</_.OptionTitle>
+                                <_.CloseButton onClick={() => setIsClicked(false)}>
+                                    ✕
+                                </_.CloseButton>
+                            </_.OptionHeader>
                             {
-                                options.map((item)=>(
-                                    <Option name={item.name} />
+                                options.map((item, index)=>(
+                                    <Option 
+                                        key={index}
+                                        name={item.name} 
+                                        isSelected={selectedCategories?.includes(item.name) || false}
+                                        onClick={() => {
+                                            onCategorySelect?.(item.name);
+                                            // 카테고리 선택 시 드롭다운을 닫지 않음
+                                        }}
+                                    />
                                 ))
                             }
                         </_.OptionBox>,
                         document.body
                     )}
                 </_.CategorySelectWrapper>
-                <_.SearchBtn onClick={onSearch}>
-                    <_.SearchBtnText>{window.location.pathname === '/make-card' ? '만들기' : '검색'}</_.SearchBtnText>
+                <_.SearchBtn onClick={() => {
+                    onSearch();
+                    setIsClicked(false); // 검색 버튼 클릭 시에만 드롭다운 닫기
+                }}>
+                    <_.SearchBtnText>
+                        {window.location.pathname === '/make-card' 
+                            ? (window.location.search.includes('edit=') ? '수정' : '만들기')
+                            : '검색'
+                        }
+                    </_.SearchBtnText>
                 </_.SearchBtn>
             </_.BtnBox>
         </_.Container>
