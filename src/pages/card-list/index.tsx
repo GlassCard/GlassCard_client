@@ -2,7 +2,7 @@ import Header from "@/components/header";
 import * as _ from './style';
 import SearchBar from "@/components/search";
 import Vocard from "@/components/vocard";
-import { supabase, type CardItem, type VocabList } from "./data";
+import { supabase, type CardItem } from "./data";
 import { useEffect, useState } from "react";
 import 'react-loading-skeleton/dist/skeleton.css';
 
@@ -16,80 +16,81 @@ const CardList = () => {
     const [rows, setRows] = useState<CardItem[][]>([]);
     const [search, setSearch] = useState("");      // 입력값
     const [query, setQuery] = useState("");        // 실제 검색에 쓸 값
+    const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
     const [loading, setLoading] = useState(true);
 
     const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearch(e.target.value);
+        // 실시간 검색을 위해 query도 함께 업데이트
+        setQuery(e.target.value);
     };
 
     const handleSearchClick = () => {
         setQuery(search); // 버튼 클릭 시에만 query 변경
     };
 
+    const handleCategorySelect = (category: string) => {
+        setSelectedCategories(prev => {
+            if (prev.includes(category)) {
+                // 이미 선택된 카테고리면 제거
+                return prev.filter(cat => cat !== category);
+            } else {
+                // 선택되지 않은 카테고리면 추가
+                return [...prev, category];
+            }
+        });
+        // 카테고리 선택 시 즉시 필터링 적용
+    };
+
     useEffect(() => {
-        const filtered = query
-            ? result.filter(card => card.title.includes(query))
-            : result;
+        let filtered = result;
+        
+        // 제목 검색
+        if (query) {
+            filtered = filtered.filter(card => 
+                card.title.toLowerCase().includes(query.toLowerCase())
+            );
+        }
+        
+        // 카테고리 필터링
+        if (selectedCategories.length > 0) {
+            filtered = filtered.filter(card => 
+                selectedCategories.some(selectedCat => 
+                    card.tags.some(tag => tag.toLowerCase().includes(selectedCat.toLowerCase()))
+                )
+            );
+        }
+        
         setRows(chunkArray(filtered, 3));
-    }, [result, query]);
+    }, [result, query, selectedCategories]);
 
     useEffect(() => {
         const fetchAll = async () => {
-            try {
-                // 1. 단어장 목록 가져오기
-                const { data: listData, error: listError } = await supabase
-                    .from('vocab_lists')
-                    .select('id, title, description, expires_at, access_key')
-                    .eq('is_deleted', false);
-                
-                if (listError) {
-                    console.error('단어장 목록 조회 오류:', listError);
-                    return;
-                }
-
-                // 2. 각 단어장의 태그와 단어 개수 가져오기
-                const promises = (listData ?? []).map(async (list: any) => {
-                    // 태그 가져오기
-                    const { data: tagData, error: tagError } = await supabase
-                        .from('vocab_list_tags')
-                        .select(`
-                            tags (
-                                name
-                            )
-                        `)
-                        .eq('vocab_list_id', list.id);
-                    
-                    if (tagError) {
-                        console.error('태그 조회 오류:', tagError);
-                    }
-
-                    // 단어 개수 가져오기
-                    const { count, error: countError } = await supabase
-                        .from('vocab_items')
-                        .select('*', { count: 'exact', head: true })
-                        .eq('vocab_list_id', list.id);
-                    
-                    if (countError) {
-                        console.error('단어 개수 조회 오류:', countError);
-                    }
-
-                    return {
-                        id: list.id,
-                        title: list.title,
-                        description: list.description,
-                        tags: tagData?.map((t: any) => t.tags.name) || [],
-                        count: count ?? 0,
-                        expiresAt: list.expires_at,
-                    };
-                });
-
-                const results = await Promise.all(promises);
-                setResult(results);
-                setLoading(false);
-            } catch (error) {
-                console.error('데이터 로드 오류:', error);
-                setLoading(false);
+            // select id, title, tags, items from vocab_lists
+            const { data: listData, error: listError } = await supabase
+                .from('vocab_lists')
+                .select('id, title, tags, items');
+            if (listError) {
+                console.error(listError);
+                return;
             }
+            // 각 단어카드마다 count 애트리뷰트 추가
+            const promises = (listData ?? []).map(async (list: any) => {
+                // items JSONB에서 단어 개수 계산
+                const items = list.items || [];
+                const count = items.length;
+                
+                return {
+                    id: list.id,
+                    title: list.title,
+                    tags: list.tags || [],
+                    count: count,
+                    expiresAt: list.expiresAt || new Date().toISOString(),
+                };
+            });
+            const results = await Promise.all(promises);
+            setResult(results);
+            setLoading(false);
         };
         fetchAll();
     }, []);
@@ -106,7 +107,13 @@ const CardList = () => {
         <>
             <Header />
             <_.Container>
-                <SearchBar value={search} onChange={handleSearch} onSearch={handleSearchClick} />
+                <SearchBar 
+                    value={search} 
+                    onChange={handleSearch} 
+                    onSearch={handleSearchClick} 
+                    onCategorySelect={handleCategorySelect}
+                    selectedCategories={selectedCategories}
+                />
                 {loading ? (
                     <_.CardListBox>
                         <_.CardListInner>
@@ -123,24 +130,33 @@ const CardList = () => {
                     </_.CardListBox>
                 ) : (
                     <_.CardListBox>
-                        <_.CardListInner>
-                            {rows.map((row, rowIdx) => (
-                                <_.Row key={rowIdx}>
-                                    {row.map((card, idx) => (
-                                        <Vocard
-                                            key={card.title + idx}
-                                            id={card.id}
-                                            tag={card.tags}
-                                            title={card.title}
-                                            count={card.count}
-                                        />
-                                    ))}
-                                    {[...Array(3 - row.length)].map((_, index) => (
-                                        <div key={`empty-${rowIdx}-${index}`} style={{ flex: 1, minWidth: 0 }} />
-                                    ))}
-                                </_.Row>
-                            ))}
-                        </_.CardListInner>
+                        {rows.length === 0 && (query || selectedCategories.length > 0) ? (
+                            <_.NoResultMessage>
+                                검색 결과가 없습니다.
+                                <br />
+                                다른 키워드나 카테고리로 검색해보세요.
+                            </_.NoResultMessage>
+                        ) : (
+                            <_.CardListInner>
+                                {rows.map((row, rowIdx) => (
+                                    <_.Row key={rowIdx}>
+                                        {row.map((card, idx) => (
+                                            <Vocard
+                                                key={card.title + idx}
+                                                tag={card.tags}
+                                                title={card.title}
+                                                count={card.count}
+                                                id={card.id}
+                                                expiresAt={card.expiresAt}
+                                            />
+                                        ))}
+                                        {[...Array(3 - row.length)].map((_, index) => (
+                                            <div key={`empty-${rowIdx}-${index}`} style={{ flex: 1, minWidth: 0 }} />
+                                        ))}
+                                    </_.Row>
+                                ))}
+                            </_.CardListInner>
+                        )}
                     </_.CardListBox>
                 )}
             </_.Container>

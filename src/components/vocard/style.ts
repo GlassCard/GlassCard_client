@@ -113,13 +113,21 @@ export const Modify = styled.div`
     border-radius: 16px;
     border: 1px solid var(--primary-normal);
     background: var(--primary-light-active);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    
+    &:hover {
+        background: var(--primary-normal);
+        transform: scale(1.05);
+    }
 `
 
 export const ModifyIcon = styled.img`
     width: 14px;
     height: 14px;
     aspect-ratio: 1/1;
-    background-color:transparent;
+    background-color: transparent;
+    pointer-events: none;
 `
 
 export const StudyButton = styled.button`

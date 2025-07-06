@@ -36,8 +36,8 @@ export const Row = styled.div`
     gap: 10px;
     margin-bottom: 16px;
     width: 100%;
-    background-color:transparent;
-    justify-content: flex-start
+    background-color: transparent;
+    justify-content: flex-start;
 `
 
 export const Empty = styled.div`
@@ -63,4 +63,20 @@ export const SkeletonCard = styled(Skeleton)`
     background-color:rgba(224, 231, 239, 0.57);
     --base-color:rgba(224, 231, 239, 0.58);
     --highlight-color:rgba(245, 247, 250, 0.61);
+`;
+
+export const NoResultMessage = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 200px;
+    text-align: center;
+    color: var(--text-disabled);
+    font-family: "Pretendard Variable";
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 1.5;
+    background-color: transparent;
 `;
