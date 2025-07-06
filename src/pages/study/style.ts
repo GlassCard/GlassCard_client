@@ -257,4 +257,38 @@ export const ExitButton = styled.button`
         background: rgba(255, 255, 255, 0.3);
         transform: translateY(-2px);
     }
+`;
+
+export const ErrorContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 60vh;
+    text-align: center;
+    gap: 30px;
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 24px;
+    padding: 40px;
+    box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+`;
+
+export const ErrorText = styled.p`
+    font-size: 18px;
+    color: #f44336;
+    margin: 0;
+    font-weight: bold;
+`;
+
+export const LoadingText = styled.div`
+    font-size: 16px;
+    color: #666;
+    text-align: center;
+    padding: 10px;
+    font-style: italic;
 `; 

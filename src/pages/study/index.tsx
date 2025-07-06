@@ -1,47 +1,35 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Header from "@/components/header";
 import { supabase } from '../card-list/data';
+import { useStudyStore, type VocabItem } from '@/store/studyStore';
 import * as _ from './style';
-
-interface VocabItem {
-    id: string;
-    word: string;
-    meaning: string;
-    partOfSpeech?: string;
-    correctAnswer: string;
-}
-
-type AnswerType = 'Correct' | 'Flexible' | 'Incorrect';
-
-interface StudySession {
-    vocabListId: string;
-    currentIndex: number;
-    correctCount: number;
-    totalCount: number;
-    startTime: Date;
-    answers: Array<{
-        itemId: string;
-        userAnswer: string;
-        isCorrect: boolean;
-        similarity: number;
-    }>;
-}
 
 const Study = () => {
     const { vocabListId } = useParams<{ vocabListId: string }>();
     const navigate = useNavigate();
     
-    const [vocabItems, setVocabItems] = useState<VocabItem[]>([]);
-    const [currentIndex, setCurrentIndex] = useState(0);
-    const [userAnswer, setUserAnswer] = useState('');
-    const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
-    const [answerType, setAnswerType] = useState<AnswerType | null>(null);
-    const [showHint, setShowHint] = useState(false);
-    const [studySession, setStudySession] = useState<StudySession | null>(null);
-    const [studyMode, setStudyMode] = useState<'word-to-meaning' | 'meaning-to-word' | 'example-fill'>('word-to-meaning');
-    const [wrongAnswers, setWrongAnswers] = useState<VocabItem[]>([]);
-    const [isCompleted, setIsCompleted] = useState(false);
+    const {
+        vocabItems,
+        currentIndex,
+        userAnswer,
+        isCorrect,
+        answerType,
+        showHint,
+        studySession,
+        studyMode,
+        wrongAnswers,
+        isCompleted,
+        isLoading,
+        error,
+        setUserAnswer,
+        setShowHint,
+        initializeSession,
+        submitAnswer,
+        nextQuestion,
+        resetStudy,
+        setError
+    } = useStudyStore();
 
     // 단어장 데이터 로드
     useEffect(() => {
@@ -54,6 +42,7 @@ const Study = () => {
                 
                 if (error) {
                     console.error('단어 목록 조회 오류:', error);
+                    setError('단어 목록을 불러오는데 실패했습니다.');
                     return;
                 }
                 
@@ -65,99 +54,27 @@ const Study = () => {
                     correctAnswer: item.meaning // 단어→뜻 학습 모드 기준
                 })) || [];
                 
-                setVocabItems(items);
-                
                 // 학습 세션 초기화
-                const session: StudySession = {
-                    vocabListId: vocabListId || '',
-                    currentIndex: 0,
-                    correctCount: 0,
-                    totalCount: items.length,
-                    startTime: new Date(),
-                    answers: []
-                };
-                setStudySession(session);
+                initializeSession(vocabListId || '', items);
             } catch (error) {
                 console.error('데이터 로드 오류:', error);
+                setError('데이터를 불러오는데 실패했습니다.');
             }
         };
         
         if (vocabListId) {
             fetchVocabItems();
         }
-    }, [vocabListId]);
+    }, [vocabListId, initializeSession, setError]);
 
-    const checkAnswer = (userInput: string, correctAnswer: string): { isCorrect: boolean; similarity: number; type: AnswerType } => {
-        // 1. Exact match 확인
-        if (userInput.toLowerCase().trim() === correctAnswer.toLowerCase().trim()) {
-            return { isCorrect: true, similarity: 1.0, type: 'Correct' };
-        }
+    const handleSubmit = async () => {
+        if (!vocabItems[currentIndex] || !studySession || !userAnswer.trim()) return;
         
-        // 2. 유사도 분석 (실제로는 AI 모델 사용)
-        // 임시로 단순 키워드 매칭
-        const userWords = userInput.toLowerCase().split(' ');
-        const correctWords = correctAnswer.toLowerCase().split(' ');
-        const commonWords = userWords.filter(word => correctWords.includes(word));
-        const similarity = commonWords.length / Math.max(userWords.length, correctWords.length);
-        
-        if (similarity > 0.3) {
-            return { isCorrect: true, similarity, type: 'Flexible' };
-        } else {
-            return { isCorrect: false, similarity, type: 'Incorrect' };
-        }
-    };
-
-    const handleSubmit = () => {
-        if (!vocabItems[currentIndex] || !studySession) return;
-        
-        const currentItem = vocabItems[currentIndex];
-        const result = checkAnswer(userAnswer, currentItem.correctAnswer);
-        
-        // 답변 기록
-        const newAnswer = {
-            itemId: currentItem.id,
-            userAnswer,
-            isCorrect: result.isCorrect,
-            similarity: result.similarity
-        };
-        
-        setStudySession(prev => prev ? {
-            ...prev,
-            correctCount: prev.correctCount + (result.isCorrect ? 1 : 0),
-            answers: [...prev.answers, newAnswer]
-        } : null);
-        
-        setIsCorrect(result.isCorrect);
-        setAnswerType(result.type);
-        
-        // 틀린 답이면 wrongAnswers에 추가
-        if (!result.isCorrect) {
-            setWrongAnswers(prev => [...prev, currentItem]);
-        }
+        await submitAnswer();
         
         // 3초 후 다음 문제로
         setTimeout(() => {
-            if (currentIndex < vocabItems.length - 1) {
-                setCurrentIndex(prev => prev + 1);
-                setUserAnswer('');
-                setIsCorrect(null);
-                setAnswerType(null);
-                setShowHint(false);
-            } else {
-                // 모든 문제 완료, 틀린 문제들 다시 학습
-                if (wrongAnswers.length > 0) {
-                    setVocabItems(wrongAnswers);
-                    setCurrentIndex(0);
-                    setWrongAnswers([]);
-                    setUserAnswer('');
-                    setIsCorrect(null);
-                    setAnswerType(null);
-                    setShowHint(false);
-                } else {
-                    // 완전히 완료
-                    setIsCompleted(true);
-                }
-            }
+            nextQuestion();
         }, 3000);
     };
 
@@ -196,7 +113,10 @@ const Study = () => {
                         <_.CompletionTitle>🎉 100% 완료!</_.CompletionTitle>
                         <_.CompletionText>모든 단어를 성공적으로 학습했습니다!</_.CompletionText>
                         <_.ButtonGroup>
-                            <_.RestartButton onClick={() => window.location.reload()}>
+                            <_.RestartButton onClick={() => {
+                                resetStudy();
+                                window.location.reload();
+                            }}>
                                 다시 시작
                             </_.RestartButton>
                             <_.ExitButton onClick={() => navigate('/card-list')}>
@@ -211,6 +131,22 @@ const Study = () => {
 
     if (!currentQuestion || !studySession) {
         return <div>로딩 중...</div>;
+    }
+
+    if (error) {
+        return (
+            <>
+                <Header />
+                <_.Container>
+                    <_.ErrorContainer>
+                        <_.ErrorText>{error}</_.ErrorText>
+                        <_.RestartButton onClick={() => window.location.reload()}>
+                            다시 시도
+                        </_.RestartButton>
+                    </_.ErrorContainer>
+                </_.Container>
+            </>
+        );
     }
 
     return (
@@ -245,13 +181,17 @@ const Study = () => {
                         value={userAnswer}
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) => setUserAnswer(e.target.value)}
                         placeholder="답을 입력하세요..."
-                        disabled={isCorrect !== null}
+                        disabled={isCorrect !== null || isLoading}
                         onKeyPress={(e) => {
-                            if (e.key === 'Enter' && userAnswer.trim() && isCorrect === null) {
+                            if (e.key === 'Enter' && userAnswer.trim() && isCorrect === null && !isLoading) {
                                 handleSubmit();
                             }
                         }}
                     />
+                    
+                    {isLoading && (
+                        <_.LoadingText>답안을 확인하는 중...</_.LoadingText>
+                    )}
                     
                     {isCorrect !== null && (
                         <_.ResultContainer>
@@ -273,9 +213,9 @@ const Study = () => {
                     
                     <_.SubmitButton 
                         onClick={handleSubmit}
-                        disabled={!userAnswer.trim() || isCorrect !== null}
+                        disabled={!userAnswer.trim() || isCorrect !== null || isLoading}
                     >
-                        제출
+                        {isLoading ? '확인 중...' : '제출'}
                     </_.SubmitButton>
                 </_.AnswerContainer>
             </_.Container>
