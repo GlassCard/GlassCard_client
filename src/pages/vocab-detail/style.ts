@@ -6,7 +6,9 @@ export const Container = styled.div`
     align-items: center;
     padding: 64px;
     min-height: 100vh;
-    background-color: #F5F1FF;
+    background-color: rgba(255, 255, 255, 0.18);
+    backdrop-filter: blur(25px);
+
 `;
 
 export const Title = styled.h1`
@@ -23,16 +25,18 @@ export const WordList = styled.div`
     flex-direction: column;
     gap: 15px;
     margin-bottom: 30px;
+    background-color: transparent;
 `;
 
 export const WordItem = styled.div`
     display: flex;
-    background: white;
-    border: 1px solid #e0e0e0;
     padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 24px;
     gap: 15px;
+    border: 8px solid var(--background-surface);
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(40px);
+    background: var(--background-fill);
 `;
 
 export const WordNumber = styled.div`
@@ -41,7 +45,9 @@ export const WordNumber = styled.div`
     justify-content: center;
     width: 30px;
     height: 30px;
-    background: #4CAF50;
+    background: var(--primary-dark);
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(40px);
     color: white;
     border-radius: 50%;
     font-weight: bold;
@@ -53,17 +59,20 @@ export const WordContent = styled.div`
     display: flex;
     flex-direction: column;
     gap: 8px;
+    background-color: transparent;
 `;
 
 export const Word = styled.div`
     font-size: 20px;
     font-weight: bold;
     color: #333;
+    background-color: transparent;
 `;
 
 export const Meaning = styled.div`
     font-size: 16px;
     color: #666;
+    background-color: transparent;
 `;
 
 export const PartOfSpeech = styled.div`
@@ -71,7 +80,7 @@ export const PartOfSpeech = styled.div`
     color: #666;
     font-style: italic;
     padding: 4px 8px;
-    background-color: #f0f0f0;
+    background-color: var(--primary-light-active);
     border-radius: 4px;
     display: inline-block;
     margin-top: 4px;
@@ -82,13 +91,13 @@ export const StartButton = styled.button`
     font-size: 18px;
     font-weight: bold;
     color: white;
-    background: #4CAF50;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
     transition: all 0.3s ease;
+    border-radius: 64px;
+    border: 4px solid var(--background-surface);
+    background: rgba(45, 49, 87, 0.90);
+    cursor: pointer;
     
     &:hover {
-        background: #45a049;
+        background: var(--primary-darker);
     }
 `; 
