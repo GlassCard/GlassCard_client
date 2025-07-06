@@ -180,6 +180,7 @@ const Study = () => {
                                         handleSubmit();
                                     }
                                 }}
+                                status={answerType === null ? undefined : answerType}
                             />
                             {isCorrect !== null &&(
                                 <_.ResultMessage>정답: {vocabItems[currentIndex]?.correctAnswer}</_.ResultMessage>
