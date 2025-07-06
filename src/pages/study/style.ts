@@ -94,16 +94,6 @@ export const AnswerInput = styled.input`
     }
 `;
 
-export const ResultMessage = styled.div<{ isCorrect: boolean }>`
-    padding: 15px 20px;
-    border-radius: 8px;
-    font-size: 16px;
-    font-weight: bold;
-    background-color: ${props => props.isCorrect ? '#d4edda' : '#f8d7da'};
-    color: ${props => props.isCorrect ? '#155724' : '#721c24'};
-    border: 1px solid ${props => props.isCorrect ? '#c3e6cb' : '#f5c6cb'};
-`;
-
 export const SubmitButton = styled.button<{ status: 'Correct' | 'Flexible' | 'Incorrect' | undefined }>`
     padding: 15px 40px;
     font-size: 18px;
@@ -162,6 +152,7 @@ export const HintButton = styled.button`
     font-weight: 400;
     line-height: 140%; /* 22.4px */
     border:none;
+    background:transparent;
 `;
 
 export const ResultContainer = styled.div`
@@ -348,4 +339,15 @@ export const AnswerContainerInner = styled.div`
     gap: 12px;
     flex: 1 0 0;
     background-color:transparent;
+`
+
+export const ResultMessage = styled.p`
+    color: var(--correct-green-fill);
+    /* text-md */
+    font-family: "Pretendard Variable";
+    font-size: 16px;
+    font-style: border;
+    font-weight: 700;
+    line-height: 140%;
+    background:transparent;
 `

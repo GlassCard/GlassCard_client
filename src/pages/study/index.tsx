@@ -181,7 +181,10 @@ const Study = () => {
                                     }
                                 }}
                             />
-                            {!showHint && (
+                            {isCorrect !== null &&(
+                                <_.ResultMessage>정답: {vocabItems[currentIndex]?.correctAnswer}</_.ResultMessage>
+                            )}
+                            {!showHint && isCorrect === null &&(
                                 <_.HintButton onClick={() => setShowHint(true)}>
                                     힌트 보기
                                 </_.HintButton>
@@ -193,29 +196,12 @@ const Study = () => {
                             <_.LoadingText>답안을 확인하는 중...</_.LoadingText>
                         )}
 
-                        {isCorrect !== null && (
-                            <_.ResultContainer>
-                                <_.ResultMessage isCorrect={isCorrect}>
-                                    {isCorrect ? '정답입니다! 🎉' : '틀렸습니다.'}
-                                </_.ResultMessage>
-                                <_.AnswerType type={answerType || 'Incorrect'}>
-                                    {answerType === 'Correct' && '정확한 답'}
-                                    {answerType === 'Flexible' && '유연한 답'}
-                                    {answerType === 'Incorrect' && '틀린 답'}
-                                </_.AnswerType>
-                                {!isCorrect && (
-                                    <_.CorrectAnswer>
-                                        정답: {vocabItems[currentIndex]?.correctAnswer}
-                                    </_.CorrectAnswer>
-                                )}
-                            </_.ResultContainer>
-                        )}
                     </_.AnswerContainer>
                 </_.QuestionContainer>
                 <_.SubmitButton
                     onClick={handleSubmit}
                     disabled={!userAnswer.trim() || isCorrect !== null || isLoading}
-                    status={answerType}
+                    status={answerType === null ? undefined : answerType}
                 >
                     {isLoading ? 'Checking...' : 'Next'}
                 </_.SubmitButton>
