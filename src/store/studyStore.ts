@@ -191,7 +191,7 @@ export const useStudyStore = create<StudyState>((set, get) => ({
   },
 
   nextQuestion: () => {
-    const { vocabItems, currentIndex, wrongAnswers, userAnswer } = get();
+    const { vocabItems, currentIndex, wrongAnswers } = get();
     
     if (currentIndex < vocabItems.length - 1) {
       set({
