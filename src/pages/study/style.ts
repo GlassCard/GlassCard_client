@@ -5,37 +5,39 @@ export const Container = styled.div`
     flex-direction: column;
     align-items: center;
     justify-content:center;
-    padding: 64px;
     min-height: 100vh;
     background-color:transparent;
 `;
 
 export const QuestionContainer = styled.div`
     width: 100%;
-    max-width: 600px;
+    max-width: 700px;
     background: white;
-    padding: 0 30px 30px 30px;
+    padding: 0 0 30px 0;
     border-radius: 12px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    margin-bottom: 30px;
+    margin-bottom: 48px;
     text-align: center;
     border-radius: 36px;
     border: 12px solid var(--background-surface);
     background: var(--background-fill);
     box-shadow: 0px 6px 6px 0px rgba(0, 0, 0, 0.25);
     backdrop-filter: blur(60px);
+    box-sizing:border-box;
 `;
 
 export const QuestionNumber = styled.div`
-    font-size: 14px;
-    color: #666;
-    margin-bottom: 20px;
+    color: var(--text-primary);
+    font-family: "Pretendard Variable";
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 130%;
+    margin-bottom:10px;
 `;
 
 export const Question = styled.h2`
     color: var(--text-primary);
-
-
     font-family: "Pretendard Variable";
     font-size: 38px;
     font-style: normal;
@@ -55,24 +57,27 @@ export const Hint = styled.div`
 
 export const AnswerContainer = styled.div`
     display: flex;
-    padding: 15px 48px;
+    padding: 48px 48px 0 48px;
     justify-content: center;
     align-items: center;
     gap: 15px;
     flex: 1 0 0;
     align-self: stretch;
+    background-color:transparent;
+    width:100%;
+    box-sizing:border-box;
 `;
 
 export const AnswerInput = styled.input`
     width: 100%;
     padding: 15px 20px;
     font-size: 18px;
-    background: white;
-    border: 1px solid #ddd;
-    border-radius: 8px;
     outline: none;
     color: #333;
     transition: all 0.3s ease;
+    border:none;
+    border-radius: 24px;
+    background: #FFF;
     
     &::placeholder {
         color: #999;
@@ -112,7 +117,8 @@ export const SubmitButton = styled.button`
     border: 5px solid var(--background-surface);
     transition: all 0.3s ease;
     width: 100%;
-    max-width: 600px;
+    max-width: 700px;
+    box-sizing:border-box;
     
     &:hover:not(:disabled) {
         background: #45a049;
@@ -124,18 +130,15 @@ export const SubmitButton = styled.button`
 `;
 
 export const HintButton = styled.button`
-    padding: 8px 16px;
-    font-size: 14px;
-    color: #666;
-    background-color: #f0f0f0;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    
-    &:hover {
-        background-color: #e0e0e0;
-    }
+    color: var(--primary-dark-hover, #4D5495);
+
+    /* text-md */
+    font-family: "Pretendard Variable";
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 140%; /* 22.4px */
+    border:none;
 `;
 
 export const ResultContainer = styled.div`
@@ -312,4 +315,14 @@ export const SoundImg = styled.img`
     width: 32px;
     height: 32px;
     aspect-ratio: 1/1;
+`
+
+export const AnswerContainerInner = styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    flex: 1 0 0;
+    background-color:transparent;
 `

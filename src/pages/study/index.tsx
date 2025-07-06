@@ -163,28 +163,31 @@ const Study = () => {
                             <_.Question>{currentQuestion.question}</_.Question>
                         </_.QuestionContainerTopInner>
                     </_.QuestionContainerTop>
-                    {/* {!showHint && (
-                        <_.HintButton onClick={() => setShowHint(true)}>
-                            힌트 보기
-                        </_.HintButton>
-                    )}
 
-                    {showHint && (
+                    {/* {showHint && (
                         <_.Hint>힌트: {currentQuestion.hint}</_.Hint>
                     )} */}
 
                     <_.AnswerContainer>
-                        <_.AnswerInput
-                            value={userAnswer}
-                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setUserAnswer(e.target.value)}
-                            placeholder="단어의 의미를 입력하세요."
-                            disabled={isCorrect !== null || isLoading}
-                            onKeyPress={(e) => {
-                                if (e.key === 'Enter' && userAnswer.trim() && isCorrect === null && !isLoading) {
-                                    handleSubmit();
-                                }
-                            }}
-                        />
+                        <_.AnswerContainerInner>
+                            <_.AnswerInput
+                                value={userAnswer}
+                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setUserAnswer(e.target.value)}
+                                placeholder="단어의 의미를 입력하세요."
+                                disabled={isCorrect !== null || isLoading}
+                                onKeyPress={(e) => {
+                                    if (e.key === 'Enter' && userAnswer.trim() && isCorrect === null && !isLoading) {
+                                        handleSubmit();
+                                    }
+                                }}
+                            />
+                            {!showHint && (
+                                <_.HintButton onClick={() => setShowHint(true)}>
+                                    힌트 보기
+                                </_.HintButton>
+                            )}
+                        </_.AnswerContainerInner>
+
 
                         {isLoading && (
                             <_.LoadingText>답안을 확인하는 중...</_.LoadingText>
