@@ -74,11 +74,22 @@ export const AnswerInput = styled.input<{ status: 'Correct' | 'Flexible' | 'Inco
     padding: 15px 20px;
     font-size: 18px;
     outline: none;
-    color: #333;
     transition: all 0.3s ease;
     border-radius: 24px;
     background: #FFF;
     border: 2px solid;
+    color: ${({ status }) => {
+        switch (status) {
+            case 'Correct':
+                return 'var(--correct-green-stroke)';
+            case 'Flexible':
+                return '(--flexible-yellow-stroke)';
+            case 'Incorrect':
+                return 'var(--incorrect-red-stroke)';
+            default:
+                return 'var(--text-primary)';
+        }
+    }};
 
     border-color: ${({ status }) => {
         switch (status) {
@@ -308,7 +319,7 @@ export const LoadingText = styled.div`
     text-align: center;
     padding: 10px;
     font-style: italic;
-`; 
+`;
 
 export const QuestionContainerTop = styled.div`
     display: flex;
