@@ -1,54 +1,50 @@
 import styled from "@emotion/styled";
+import { keyframes } from "@emotion/react";
 
 export const Container = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 64px;
+    justify-content:center;
     min-height: 100vh;
-    background-color: #F5F1FF;
-`;
-
-export const ProgressBar = styled.div`
-    width: 100%;
-    max-width: 600px;
-    height: 8px;
-    background-color: #e0e0e0;
-    border-radius: 4px;
-    margin-bottom: 40px;
-    overflow: hidden;
-`;
-
-export const ProgressFill = styled.div<{ width: string }>`
-    height: 100%;
-    background-color: #4CAF50;
-    width: ${props => props.width};
-    transition: width 0.3s ease;
+    background-color:transparent;
 `;
 
 export const QuestionContainer = styled.div`
     width: 100%;
-    max-width: 600px;
+    position: relative;
+    max-width: 700px;
     background: white;
-    border: 1px solid #e0e0e0;
-    padding: 30px;
+    padding: 0 0 30px 0;
     border-radius: 12px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    margin-bottom: 30px;
+    margin-bottom: 48px;
     text-align: center;
+    border-radius: 36px;
+    border: 12px solid var(--background-surface);
+    background: var(--background-fill);
+    box-shadow: 0px 6px 6px 0px rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(60px);
+    box-sizing:border-box;
 `;
 
 export const QuestionNumber = styled.div`
-    font-size: 14px;
-    color: #666;
-    margin-bottom: 20px;
+    color: var(--text-primary);
+    font-family: "Pretendard Variable";
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 130%;
+    margin-bottom:10px;
 `;
 
 export const Question = styled.h2`
-    font-size: 24px;
-    color: #333;
-    margin-bottom: 20px;
-    line-height: 1.4;
+    color: var(--text-primary);
+    font-family: "Pretendard Variable";
+    font-size: 38px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 120%; /* 57.6px */
 `;
 
 export const Hint = styled.div`
@@ -62,84 +58,117 @@ export const Hint = styled.div`
 `;
 
 export const AnswerContainer = styled.div`
-    width: 100%;
-    max-width: 600px;
     display: flex;
-    flex-direction: column;
+    padding: 48px 48px 0 48px;
+    justify-content: center;
     align-items: center;
-    gap: 20px;
+    gap: 15px;
+    flex: 1 0 0;
+    align-self: stretch;
+    background-color:transparent;
+    width:100%;
+    box-sizing:border-box;
 `;
 
-export const AnswerInput = styled.input`
+export const AnswerInput = styled.input<{ status: 'Correct' | 'Flexible' | 'Incorrect' | undefined }>`
     width: 100%;
     padding: 15px 20px;
     font-size: 18px;
-    background: white;
-    border: 1px solid #ddd;
-    border-radius: 8px;
     outline: none;
-    color: #333;
     transition: all 0.3s ease;
+    border-radius: 24px;
+    background: #FFF;
+    border: 2px solid;
+    color: ${({ status }) => {
+        switch (status) {
+            case 'Correct':
+                return 'var(--correct-green-stroke)';
+            case 'Flexible':
+                return '(--flexible-yellow-stroke)';
+            case 'Incorrect':
+                return 'var(--incorrect-red-stroke)';
+            default:
+                return 'var(--text-primary)';
+        }
+    }};
+
+    border-color: ${({ status }) => {
+        switch (status) {
+            case 'Correct':
+                return 'var(--correct-green-stroke)';
+            case 'Flexible':
+                return '(--flexible-yellow-stroke)';
+            case 'Incorrect':
+                return 'var(--incorrect-red-stroke)';
+            default:
+                return 'var(--background-surface)';
+        }
+    }};
     
     &::placeholder {
         color: #999;
     }
-    
-    &:focus {
-        border-color: #4CAF50;
-        box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
-    }
-    
-    &:disabled {
-        background: #f5f5f5;
-        color: #999;
-    }
 `;
 
-export const ResultMessage = styled.div<{ isCorrect: boolean }>`
-    padding: 15px 20px;
-    border-radius: 8px;
-    font-size: 16px;
-    font-weight: bold;
-    background-color: ${props => props.isCorrect ? '#d4edda' : '#f8d7da'};
-    color: ${props => props.isCorrect ? '#155724' : '#721c24'};
-    border: 1px solid ${props => props.isCorrect ? '#c3e6cb' : '#f5c6cb'};
-`;
-
-export const SubmitButton = styled.button`
+export const SubmitButton = styled.button<{ status: 'Correct' | 'Flexible' | 'Incorrect' | undefined }>`
     padding: 15px 40px;
     font-size: 18px;
     font-weight: bold;
     color: white;
-    background: #4CAF50;
-    border: none;
-    border-radius: 8px;
+    background: ${({ status }) => {
+        switch (status) {
+            case 'Correct':
+                return 'var(--correct-green-fill)'; // 초록
+            case 'Flexible':
+                return 'var(--flexible-yellow-fill)'; // 노랑
+            case 'Incorrect':
+                return 'var(--incorrect-red-fill)'; // 빨강
+            default:
+                return 'rgba(63, 66, 101, 0.8)';
+        }
+    }};
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(40px);
     cursor: pointer;
+    border-radius: 24px;
+    border: 5px solid;
     transition: all 0.3s ease;
+    width: 100%;
+    max-width: 700px;
+    box-sizing: border-box;
+    border-color: ${({ status }) => {
+        switch (status) {
+            case 'Correct':
+                return 'var(--correct-green-stroke)';
+            case 'Flexible':
+                return '(--flexible-yellow-stroke)';
+            case 'Incorrect':
+                return 'var(--incorrect-red-stroke)';
+            default:
+                return 'var(--background-surface)';
+        }
+    }};
     
     &:hover:not(:disabled) {
         background: #45a049;
     }
     
     &:disabled {
-        background: #cccccc;
         cursor: not-allowed;
     }
 `;
 
 export const HintButton = styled.button`
-    padding: 8px 16px;
-    font-size: 14px;
-    color: #666;
-    background-color: #f0f0f0;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    
-    &:hover {
-        background-color: #e0e0e0;
-    }
+    color: var(--primary-dark-hover, #4D5495);
+
+    /* text-md */
+    font-family: "Pretendard Variable";
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 140%; /* 22.4px */
+    border:none;
+    background:transparent;
 `;
 
 export const ResultContainer = styled.div`
@@ -291,4 +320,153 @@ export const LoadingText = styled.div`
     text-align: center;
     padding: 10px;
     font-style: italic;
-`; 
+`;
+
+export const QuestionContainerTop = styled.div`
+    display: flex;
+    padding: 15px;
+    height: 150px;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+    align-self: stretch;
+    border-bottom: 1.5px dashed var(--text-disabled);
+    background-color:transparent;
+`
+
+export const QuestionContainerTopInner = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+`
+
+export const SoundImg = styled.img`
+    width: 32px;
+    height: 32px;
+    aspect-ratio: 1/1;
+`
+
+export const AnswerContainerInner = styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    flex: 1 0 0;
+    background-color:transparent;
+`
+
+export const ResultMessage = styled.p`
+    color: var(--correct-green-fill);
+    /* text-md */
+    font-family: "Pretendard Variable";
+    font-size: 16px;
+    font-style: border;
+    font-weight: 700;
+    line-height: 140%;
+    background:transparent;
+`
+
+export const StatusIndex = styled.div<{ status: 'Correct' | 'Flexible' | 'Incorrect' | undefined }>`
+    display: flex;
+    width: 30px;
+    height: 60px;
+    padding: 10px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    position: absolute;
+    top: 0;
+    right: 20px;
+
+    border-color: ${({ status }) => {
+        switch (status) {
+            case 'Correct':
+                return 'var(--correct-green-stroke)';
+            case 'Flexible':
+                return '(--flexible-yellow-stroke)';
+            case 'Incorrect':
+                return 'var(--incorrect-red-stroke)';
+            default:
+                return 'var(--background-surface)';
+        }
+    }};
+
+    background: ${({ status }) => {
+        switch (status) {
+            case 'Correct':
+                return 'var(--correct-green-fill)';
+            case 'Flexible':
+                return 'var(--flexible-yellow-fill)';
+            case 'Incorrect':
+                return 'var(--incorrect-red-fill)';
+            default:
+                return 'rgba(63, 66, 101, 0.8)';
+        }
+    }};
+    
+    border-radius: 0px 0px var(--16px, 16px) var(--16px, 16px);
+    border-right: 5px solid ${({ status }) => {
+        switch (status) {
+            case 'Correct': return 'var(--correct-green-stroke)';
+            case 'Flexible': return 'var(--flexible-yellow-stroke)';
+            case 'Incorrect': return 'var(--incorrect-red-stroke)';
+            default: return 'var(--background-surface)';
+        }
+    }};
+    border-bottom: 5px solid ${({ status }) => {
+        switch (status) {
+            case 'Correct': return 'var(--correct-green-stroke)';
+            case 'Flexible': return 'var(--flexible-yellow-stroke)';
+            case 'Incorrect': return 'var(--incorrect-red-stroke)';
+            default: return 'var(--background-surface)';
+        }
+    }};
+    border-left: 5px solid ${({ status }) => {
+        switch (status) {
+            case 'Correct': return 'var(--correct-green-stroke)';
+            case 'Flexible': return 'var(--flexible-yellow-stroke)';
+            case 'Incorrect': return 'var(--incorrect-red-stroke)';
+            default: return 'var(--background-surface)';
+        }
+    }};
+
+    box-shadow: 0px 4px 20px 0px rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(50px);
+`
+
+export const IndexImg = styled.img`
+    width: 20px;
+    height: 20px;
+    background:transparent;
+`
+
+const float = keyframes`
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-40px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+`;
+
+export const FloatingImg = styled.img<{top : string, left: string, time: string}>`
+    width: 240px;
+    height: 273px;
+    flex-shrink: 0;
+    position:absolute;
+    background-color:transparent;
+    user-drag: none;
+    user-select: none;
+    -webkit-user-drag: none;
+    -webkit-user-select: none;
+    left:${({ left }) => left};
+    top:${({ top }) => top};
+    animation: ${float} ${({ time }) => time} ease-in-out infinite;
+`
+
