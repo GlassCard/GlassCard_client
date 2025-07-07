@@ -74,15 +74,15 @@ export const useStudyStore = create<StudyState>((set, get) => ({
 
   // 액션들
   setVocabItems: (items) => set({ vocabItems: items }),
-  
+
   setCurrentIndex: (index) => set({ currentIndex: index }),
-  
+
   setUserAnswer: (answer) => set({ userAnswer: answer }),
-  
+
   setShowHint: (show) => set({ showHint: show }),
-  
+
   setStudyMode: (mode) => set({ studyMode: mode }),
-  
+
   initializeSession: (vocabListId, items) => {
     const session: StudySession = {
       vocabListId,
@@ -92,8 +92,8 @@ export const useStudyStore = create<StudyState>((set, get) => ({
       startTime: new Date(),
       answers: []
     };
-    set({ 
-      vocabItems: items, 
+    set({
+      vocabItems: items,
       studySession: session,
       currentIndex: 0,
       userAnswer: '',
@@ -108,48 +108,53 @@ export const useStudyStore = create<StudyState>((set, get) => ({
 
   checkAnswer: async (userInput, correctAnswer) => {
     set({ isLoading: true, error: null });
-    
+    const normalize = (str: string) =>str.toLowerCase().replace(/\s+/g, '').trim(); // 공백 완전 제거
+
+    // console.log(normalize(userInput));
+    // console.log(normalize(correctAnswer));
+
     try {
       // 1. Exact match 확인 (빠른 응답을 위해 먼저 체크)
-      if (userInput.toLowerCase().trim() === correctAnswer.toLowerCase().trim()) {
+      if (normalize(userInput) == normalize(correctAnswer)) {
+        // console.log("correct");
         set({ isLoading: false });
         return { isCorrect: true, similarity: 1.0, type: 'Correct' as AnswerType };
       }
-      
+
       // 2. 외부 API로 유사도 분석
       const result = await compareAnswers(userInput, correctAnswer);
-      
+
       if (!result.success) {
         throw new Error('API 응답 실패');
       }
-      
+
       // total_score를 기준으로 정확도 판단
       const totalScore = result.analysis.total_score;
       const isCorrect = totalScore >= 0.6; // 60% 이상이면 정답으로 판단
-      
-      const answerType: AnswerType = isCorrect 
+
+      const answerType: AnswerType = isCorrect
         ? (totalScore >= 0.9 ? 'Correct' : 'Flexible')
         : 'Incorrect';
-      
+
       set({ isLoading: false });
       return {
         isCorrect,
         similarity: totalScore,
         type: answerType
       };
-      
+
     } catch (error) {
       console.error('답안 확인 오류:', error);
-      
+
       // API 실패 시 기존 로직으로 폴백
       const userWords = userInput.toLowerCase().split(' ');
       const correctWords = correctAnswer.toLowerCase().split(' ');
       const commonWords = userWords.filter(word => correctWords.includes(word));
       const similarity = commonWords.length / Math.max(userWords.length, correctWords.length);
-      
+
       const isCorrect = similarity > 0.3;
       const answerType: AnswerType = isCorrect ? 'Flexible' : 'Incorrect';
-      
+
       set({ isLoading: false });
       return { isCorrect, similarity, type: answerType };
     }
@@ -157,12 +162,12 @@ export const useStudyStore = create<StudyState>((set, get) => ({
 
   submitAnswer: async () => {
     const { vocabItems, currentIndex, studySession, userAnswer, wrongAnswers } = get();
-    
+
     if (!vocabItems[currentIndex] || !studySession) return;
-    
+
     const currentItem = vocabItems[currentIndex];
     const result = await get().checkAnswer(userAnswer, currentItem.correctAnswer);
-    
+
     // 답변 기록
     const newAnswer: StudyAnswer = {
       itemId: currentItem.id,
@@ -171,17 +176,17 @@ export const useStudyStore = create<StudyState>((set, get) => ({
       similarity: result.similarity,
       answerType: result.type
     };
-    
+
     const updatedSession = {
       ...studySession,
       correctCount: studySession.correctCount + (result.isCorrect ? 1 : 0),
       answers: [...studySession.answers, newAnswer]
     };
-    
-    const updatedWrongAnswers = result.isCorrect 
-      ? wrongAnswers 
+
+    const updatedWrongAnswers = result.isCorrect
+      ? wrongAnswers
       : [...wrongAnswers, currentItem];
-    
+
     set({
       studySession: updatedSession,
       isCorrect: result.isCorrect,
@@ -192,7 +197,7 @@ export const useStudyStore = create<StudyState>((set, get) => ({
 
   nextQuestion: () => {
     const { vocabItems, currentIndex, wrongAnswers } = get();
-    
+
     if (currentIndex < vocabItems.length - 1) {
       set({
         currentIndex: currentIndex + 1,
