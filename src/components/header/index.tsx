@@ -13,11 +13,11 @@ const Header = () => {
         <_.Container>
             <_.Logo onClick={() => navigate('/')}/>
             <_.Nav>
-                <_.NavA href='/' isSelected={isHome}>홈</_.NavA>
+                <_.NavA isSelected={isHome} onClick={() => navigate('/')}>홈</_.NavA>
                 <_.Contour>|</_.Contour>
-                <_.NavA href='/card-list' isSelected={isCardList}>단어장</_.NavA>
+                <_.NavA isSelected={isCardList} onClick={() => navigate('/card-list')}>단어장</_.NavA>
                 <_.Contour>|</_.Contour>
-                <_.NavA href='/make-card' isSelected={isMakeCard}>단어장 만들기</_.NavA>
+                <_.NavA isSelected={isMakeCard} onClick={() => navigate('/make-card')}>단어장 만들기</_.NavA>
             </_.Nav>
         </_.Container>
     );

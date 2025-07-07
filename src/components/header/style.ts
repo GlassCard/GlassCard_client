@@ -39,6 +39,7 @@ export const NavA = styled.a<{ isSelected?: boolean }>`
     line-height: 140%;
     background-color:transparent;
     text-decoration-line: none;
+    cursor:pointer;
 `
 
 export const Contour = styled.p`
