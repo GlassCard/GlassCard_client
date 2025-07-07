@@ -45,6 +45,7 @@ export const Question = styled.h2`
     font-style: normal;
     font-weight: 600;
     line-height: 120%; /* 57.6px */
+    background-color:transparent;
 `;
 
 export const Hint = styled.div`
@@ -339,6 +340,7 @@ export const QuestionContainerTopInner = styled.div`
     flex-direction: column;
     align-items: center;
     gap: 6px;
+    background-color:transparent;
 `
 
 export const SoundImg = styled.img`
