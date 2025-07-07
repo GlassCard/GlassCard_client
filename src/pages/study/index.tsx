@@ -171,7 +171,7 @@ const Study = () => {
                         {
                             answerType !== null && (
                                 <_.StatusIndex status={answerType === null ? undefined : answerType}>
-                                    {answerType === "Correct" || answerType === "Flexible" && (
+                                    {(answerType === "Correct" || answerType === "Flexible") && (
                                         <_.IndexImg src={Check}></_.IndexImg>
                                     )}
                                     {answerType === "Incorrect" && (
