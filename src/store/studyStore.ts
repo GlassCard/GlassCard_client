@@ -127,7 +127,7 @@ export const useStudyStore = create<StudyState>((set, get) => ({
         const result = await compareAnswers(userInput, ans);
         if (!result.success) continue;
         const totalScore = result.analysis.total_score;
-        const isCorrect = totalScore >= 0.8;
+        const isCorrect = totalScore >= 0.6;
         const answerType: AnswerType = isCorrect
           ? (totalScore >= 1.0 ? 'Correct' : 'Flexible')
           : 'Incorrect';
