@@ -108,55 +108,58 @@ export const useStudyStore = create<StudyState>((set, get) => ({
 
   checkAnswer: async (userInput, correctAnswer) => {
     set({ isLoading: true, error: null });
-    const normalize = (str: string) =>str.toLowerCase().replace(/\s+/g, '').trim(); // 공백 완전 제거
+    const normalize = (str: string) => str.toLowerCase().replace(/\s+/g, '').trim();
 
-    // console.log(normalize(userInput));
-    // console.log(normalize(correctAnswer));
+    // 여러 정답 지원: 쉼표로 분리
+    const correctAnswers = correctAnswer.split(',').map(ans => normalize(ans));
 
     try {
-      // 1. Exact match 확인 (빠른 응답을 위해 먼저 체크)
-      if (normalize(userInput) == normalize(correctAnswer)) {
-        // console.log("correct");
+      // 1. Exact match (여러 정답 중 하나라도 일치하면 정답)
+      if (correctAnswers.some(ans => normalize(userInput) === ans)) {
         set({ isLoading: false });
         return { isCorrect: true, similarity: 1.0, type: 'Correct' as AnswerType };
       }
 
-      // 2. 외부 API로 유사도 분석
-      const result = await compareAnswers(userInput, correctAnswer);
+      // 2. 외부 API 유사도 분석 (여러 정답 중 가장 높은 점수 사용)
+      let bestResult = { isCorrect: false, similarity: 0, type: 'Incorrect' as AnswerType };
 
-      if (!result.success) {
-        throw new Error('API 응답 실패');
+      for (const ans of correctAnswers) {
+        const result = await compareAnswers(userInput, ans);
+        if (!result.success) continue;
+        const totalScore = result.analysis.total_score;
+        const isCorrect = totalScore >= 0.6;
+        const answerType: AnswerType = isCorrect
+          ? (totalScore >= 0.9 ? 'Correct' : 'Flexible')
+          : 'Incorrect';
+
+        if (totalScore > bestResult.similarity) {
+          bestResult = { isCorrect, similarity: totalScore, type: answerType };
+        }
+        // 완전 정답이면 바로 반환
+        if (answerType === 'Correct') break;
       }
 
-      // total_score를 기준으로 정확도 판단
-      const totalScore = result.analysis.total_score;
-      const isCorrect = totalScore >= 0.6; // 60% 이상이면 정답으로 판단
-
-      const answerType: AnswerType = isCorrect
-        ? (totalScore >= 0.9 ? 'Correct' : 'Flexible')
-        : 'Incorrect';
-
       set({ isLoading: false });
-      return {
-        isCorrect,
-        similarity: totalScore,
-        type: answerType
-      };
+      return bestResult;
 
     } catch (error) {
-      console.error('답안 확인 오류:', error);
+      // fallback: 여러 정답 중 가장 높은 유사도 사용
+      const userWords = normalize(userInput).split(' ');
+      let bestSimilarity = 0;
+      let bestType: AnswerType = 'Incorrect';
+      for (const ans of correctAnswers) {
+        const correctWords = ans.split(' ');
+        const commonWords = userWords.filter(word => correctWords.includes(word));
+        const similarity = commonWords.length / Math.max(userWords.length, correctWords.length);
 
-      // API 실패 시 기존 로직으로 폴백
-      const userWords = userInput.toLowerCase().split(' ');
-      const correctWords = correctAnswer.toLowerCase().split(' ');
-      const commonWords = userWords.filter(word => correctWords.includes(word));
-      const similarity = commonWords.length / Math.max(userWords.length, correctWords.length);
-
-      const isCorrect = similarity > 0.3;
-      const answerType: AnswerType = isCorrect ? 'Flexible' : 'Incorrect';
+        if (similarity > bestSimilarity) {
+          bestSimilarity = similarity;
+          bestType = similarity > 0.3 ? 'Flexible' : 'Incorrect';
+        }
+      }
 
       set({ isLoading: false });
-      return { isCorrect, similarity, type: answerType };
+      return { isCorrect: bestType === 'Flexible', similarity: bestSimilarity, type: bestType };
     }
   },
 
@@ -242,4 +245,4 @@ export const useStudyStore = create<StudyState>((set, get) => ({
   },
 
   setError: (error) => set({ error })
-})); 
+}));

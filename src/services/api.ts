@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'http://211.182.230.53:8000/api/v1';
+const API_BASE_URL = 'https://4967efcb7b5b.ngrok-free.app';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -31,11 +31,9 @@ export interface CompareRequest {
 
 export const compareAnswers = async (userInput: string, correctAnswer: string): Promise<CompareResponse> => {
   try {
-    const response = await api.post<CompareResponse>('/compare', null, {
-      params: {
-        meaning: correctAnswer,
-        user_input: userInput
-      }
+    const response = await api.post<CompareResponse>('/api/v1/compare', {
+      meaning: correctAnswer,
+      user_input: userInput
     });
     return response.data;
   } catch (error) {
@@ -44,4 +42,4 @@ export const compareAnswers = async (userInput: string, correctAnswer: string): 
   }
 };
 
-export default api; 
+export default api;
