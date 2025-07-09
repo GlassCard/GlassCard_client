@@ -127,9 +127,9 @@ export const useStudyStore = create<StudyState>((set, get) => ({
         const result = await compareAnswers(userInput, ans);
         if (!result.success) continue;
         const totalScore = result.analysis.total_score;
-        const isCorrect = totalScore >= 0.6;
+        const isCorrect = totalScore >= 0.8;
         const answerType: AnswerType = isCorrect
-          ? (totalScore >= 0.9 ? 'Correct' : 'Flexible')
+          ? (totalScore >= 1.0 ? 'Correct' : 'Flexible')
           : 'Incorrect';
 
         if (totalScore > bestResult.similarity) {
