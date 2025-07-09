@@ -151,7 +151,7 @@ const CardList = () => {
                                             />
                                         ))}
                                         {[...Array(3 - row.length)].map((_, index) => (
-                                            <div key={`empty-${rowIdx}-${index}`} style={{ flex: 1, minWidth: 0 }} />
+                                            <div key={`empty-${rowIdx}-${index}`} style={{ flex: 1, minWidth: 0, background:"transparent" }} />
                                         ))}
                                     </_.Row>
                                 ))}
